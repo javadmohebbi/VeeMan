@@ -31,7 +31,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{
 		{ Key: "email", Value: user.Email, },
 	}
-	_, err = models.FineOne(models.UserCollection, filter, &result)
+	_, err = models.FindOne(models.UserCollection, filter, &result)
 
 	if err != nil {
 		re := models.ResponseError{

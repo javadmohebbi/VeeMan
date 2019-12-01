@@ -3,10 +3,11 @@ package vManModels
 import (
 	db "VeeamManager/package/vManDB"
 	"context"
+	"log"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 /**
@@ -31,7 +32,7 @@ func InsertOne(collectionName string, model interface{}) (*mongo.InsertOneResult
 ///**
 //FindOne - Query database for one result
 //*/
-//func FineOne(collectionName string, key string, value interface{}, result interface{}) (interface{}, error) {
+//func FindOne(collectionName string, key string, value interface{}, result interface{}) (interface{}, error) {
 //	collection, err := db.GetDBCollection(collectionName)
 //
 //	if err != nil {
@@ -50,7 +51,7 @@ func InsertOne(collectionName string, model interface{}) (*mongo.InsertOneResult
 /**
 FindOne - Query database for one result
 */
-func FineOne(collectionName string, bsonFilter bson.D, result interface{}) (interface{}, error) {
+func FindOne(collectionName string, bsonFilter bson.D, result interface{}) (interface{}, error) {
 	collection, err := db.GetDBCollection(collectionName)
 
 	if err != nil {
@@ -66,40 +67,39 @@ func FineOne(collectionName string, bsonFilter bson.D, result interface{}) (inte
 	return result, nil
 }
 
-
 /**
 FindAll - Query database for All result
 */
-func FineAll(collectionName string, bsonFilter bson.D) ([]interface{}, error) {
+func FindAll(collectionName string, bsonFilter bson.D) ([]interface{}, error) {
 	collection, err := db.GetDBCollection(collectionName)
 
 	if err != nil {
 		return nil, err
 	}
 
-
 	cursor, err := collection.Find(context.TODO(), bsonFilter)
-
-
 
 	if err != nil {
 		return nil, err
 	}
 
 	defer cursor.Close(context.Background())
-	
+
 	var result []interface{}
 	for cursor.Next(context.Background()) {
-		res := Dashboard{}
+		var res interface{}
+		// res := fn()
+
 		err := cursor.Decode(&res)
-		if err != nil { log.Println(err) } else {
+		if err != nil {
+			log.Println("decode error: ", err)
+		} else {
 			result = append(result, res)
 		}
 	}
 
 	return result, nil
 }
-
 
 func UpdateOne(collectionName string, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
 	collection, err := db.GetDBCollection(collectionName)
@@ -112,12 +112,11 @@ func UpdateOne(collectionName string, filter interface{}, update interface{}) (*
 
 /**
 Get Mongo DB Object Id From string
- */
-func GetObjectId (hexStrObjectId string) (primitive.ObjectID) {
-	objectId, err :=  primitive.ObjectIDFromHex(hexStrObjectId)
+*/
+func GetObjectId(hexStrObjectId string) primitive.ObjectID {
+	objectId, err := primitive.ObjectIDFromHex(hexStrObjectId)
 	if err != nil {
 		return primitive.ObjectID{}
 	}
-	return  objectId
+	return objectId
 }
-

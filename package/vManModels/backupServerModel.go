@@ -4,25 +4,29 @@ import (
 	"VeeamManager/package/vManConstants"
 	"VeeamManager/package/vManValidators"
 	"VeeamManager/package/vbemAPI"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"strings"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const BkUpServerCollection string = "BackupServers"
 
 type BackupServer struct {
-	Name				string		`json:"Name" bson:"name"`
-	Type				string		`json:"Type" bson:"type"`
-	UID					string		`json:"UID" bson:"uId"`
-	Href				string		`json:"Href" bson:"href"`
-	LastSeen			time.Time	`json:"LastSeen" bson:"lastSeen"`
-	CreatedAt			time.Time	`json:"CreatedAt" bson:"createdAt"`
+	Id        interface{} `json:"Id" bson:"_id"`
+	Name      string      `json:"Name" bson:"name"`
+	Type      string      `json:"Type" bson:"type"`
+	UID       string      `json:"UID" bson:"uId"`
+	Href      string      `json:"Href" bson:"href"`
+	LastSeen  time.Time   `json:"LastSeen" bson:"lastSeen"`
+	CreatedAt time.Time   `json:"CreatedAt" bson:"createdAt"`
 }
 
-
-
+func (bs *BackupServer) GetNewEmpty() interface{} {
+	return BackupServer{}
+}
 func (bs *BackupServer) Valid() (vManValidators.ValidationResult, bool) {
 	vs := vManValidators.ValidationResult{
 		Errors: nil,
@@ -40,12 +44,14 @@ func (bs *BackupServer) Valid() (vManValidators.ValidationResult, bool) {
 	}
 
 	var ch bool = true
-	if vs.Count > 0 { ch = false }
+	if vs.Count > 0 {
+		ch = false
+	}
 
 	return vs, ch
 }
 
-func (bs *BackupServer) UpdateLastSeen () (*mongo.UpdateResult, bool) {
+func (bs *BackupServer) UpdateLastSeen() (*mongo.UpdateResult, bool) {
 	filter := bson.M{
 		"uId": bson.M{
 			"$eq": bs.UID,
@@ -76,6 +82,7 @@ func StoreOrUpdateBackupServers(refs []vbemAPI.BackupServers) {
 			UID:  bkup.UID,
 			Href: bkup.Href,
 		}
+		bs.Id = primitive.NewObjectID()
 		if _, validationResult := bs.Valid(); validationResult {
 			bs.CreatedAt = time.Now()
 			bs.LastSeen = time.Now()

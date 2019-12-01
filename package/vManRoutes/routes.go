@@ -4,6 +4,7 @@ import (
 	AuthController "VeeamManager/package/vManControllers/vManAuthController"
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
+	"VeeamManager/package/vManControllers/vManRowsController"
 	UsersController "VeeamManager/package/vManControllers/vManUsersController"
 	middleware "VeeamManager/package/vManMiddlewares"
 
@@ -42,5 +43,7 @@ func UI(r *mux.Router) {
 	r.HandleFunc("/dashboards/get/{objectId}", vManDashboardsController.GetADashboards).Methods("GET")
 
 	r.HandleFunc("/dashboards/create", vManDashboardsController.Create).Methods("POST")
+
+	r.HandleFunc("/rows", middleware.VbEntMgrLogonSession(vManRowsController.GetAll)).Methods("GET")
 
 }

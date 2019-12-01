@@ -25,14 +25,19 @@ func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 		e := bson.D{
 			{ Key: "ownerId", Value: user.Id, },
 		}
-		res, err := models.FineAll(models.DashboardCollection, e)
-
+		// var modelType = models.Dashboard{}
+		// res, err := models.FindAll(models.DashboardCollection, e, modelType.GetNewEmpty)
+		res, err := models.FindAll(models.DashboardCollection, e)
+		// log.Println("resssssssssssssssss ======>             ", res)
 		if err != nil {
 			log.Println(err)
 		}
 		var dashboards []models.Dashboard
 		for _,v := range res {
-			d := v.(models.Dashboard)
+			var d models.Dashboard
+			mr, err := bson.Marshal(v)
+			err = bson.Unmarshal(mr, &d)
+			if err != nil { continue }			
 			d.Id = d.Id.(primitive.ObjectID).String()
 			d.Id = strings.TrimLeft(strings.TrimRight(d.Id.(string),"\")"),"ObjectID(\"")
 			dashboards = append(dashboards, d)
@@ -73,7 +78,7 @@ func GetADashboards(w http.ResponseWriter, r *http.Request) {
 
 
 		var dashboard models.Dashboard
-		_, err := models.FineOne(models.DashboardCollection, e, &dashboard)
+		_, err := models.FindOne(models.DashboardCollection, e, &dashboard)
 
 		if err != nil {
 			log.Println(err)

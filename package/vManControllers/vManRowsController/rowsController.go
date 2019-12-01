@@ -1,34 +1,31 @@
-package vManEntMgrController
+package vManRowsController
 
 import (
-	"Ticketing/packages/models"
 	"VeeamManager/package/vManModels"
 	"VeeamManager/package/vbemAPI"
 	"VeeamManager/package/vbemAPI/vbemCalls"
 	"encoding/json"
-	"github.com/gorilla/context"
+	"log"
 	"net/http"
+
+	"github.com/gorilla/context"
 )
 
-func BackupServers(w http.ResponseWriter, r *http.Request) {
+func GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
-
 	refs, err := vbemCalls.BackupServers(ls.SessionId)
+
+	if err != nil {
+		log.Println("ctrl", err)
+	}
 
 	vManModels.StoreOrUpdateBackupServers(refs)
 
+	var r4ui vManModels.RowsForUI
+	r4ui.PrepareRowsForUI()
 
-	if err != nil {
-		res := models.ResponseResult{
-			Error:  true,
-			Result: err.Error(),
-		}
-		_ = json.NewEncoder(w).Encode(res)
-	}
-
-	_ = json.NewEncoder(w).Encode(refs)
-
+	_ = json.NewEncoder(w).Encode(r4ui)
 	return
 
 }
