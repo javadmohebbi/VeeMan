@@ -1,0 +1,62 @@
+# # # # # # # # # # # # # # # # # #
+#        Web Configuration        #
+# # # # # # # # # # # # # # # # # #
+server:
+  # Listen Address
+  address: 0.0.0.0
+
+  # Listen Port
+  port: 8080
+
+  # Path to Web UI - MUST be ended with / (Linux) or \ (Windows)
+  staticPath: /usr/share/vman/www/
+
+
+
+# # # # # # # # # # # # # # # # # #
+#      MongoDB Configuration      #
+# # # # # # # # # # # # # # # # # #
+mongoDB:
+  # MongoDB Host
+  host: 127.0.0.1
+
+  # MongoDB Port
+  port: 27017
+
+  # MongoDB DB Username - Can be null
+  username: #user
+
+  # MongoDB DB Password - Can be null
+  password: #secret
+
+  # MongoDB Database
+  database: dbVeeamManager
+
+
+
+
+# # # # # # # # # # # # # # # # # #
+#           Veeam Backup          #
+#        Enterprise Manager       #
+#          Configuration          #
+# # # # # # # # # # # # # # # # # #
+vbEntMgr:
+  # Protocol - http | https
+  protocol: http
+
+  # Host
+  host: 172.16.50.145
+
+  # Port
+  port: 9399
+
+  # Username
+  username: m.mohebi@mihanins.local
+
+  # Password
+  password: hichkareh11(#
+
+  # http request timeout - seconds
+  timeout: 10
+
+  sessionPath: /home/mj/go/src/VeeamManager/config/session
