@@ -10,9 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-/**
-InsertOne - Insert one element to Database Collection
-*/
+// InsertOne - Insert one element to Database Collection
 func InsertOne(collectionName string, model interface{}) (*mongo.InsertOneResult, error) {
 	collection, err := db.GetDBCollection(collectionName)
 

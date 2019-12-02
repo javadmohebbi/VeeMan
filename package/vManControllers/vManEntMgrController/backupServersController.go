@@ -6,10 +6,12 @@ import (
 	"VeeamManager/package/vbemAPI"
 	"VeeamManager/package/vbemAPI/vbemCalls"
 	"encoding/json"
-	"github.com/gorilla/context"
 	"net/http"
+
+	"github.com/gorilla/context"
 )
 
+// BackupServers - Get List of BackupServers & store them in databases
 func BackupServers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
@@ -17,7 +19,6 @@ func BackupServers(w http.ResponseWriter, r *http.Request) {
 	refs, err := vbemCalls.BackupServers(ls.SessionId)
 
 	vManModels.StoreOrUpdateBackupServers(refs)
-
 
 	if err != nil {
 		res := models.ResponseResult{

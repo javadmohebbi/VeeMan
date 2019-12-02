@@ -7,13 +7,22 @@ import (
 	"strings"
 )
 
-const HttpPath 				string = "/backupServers"
-var HttpGetJobs				string = HttpPath + "/%UID%/jobs"
-var HttpGetRepos			string = HttpPath + "/%UID%/repositories"
-var HttpGetCreds			string = HttpPath + "/%UID%/credentials"
-var HttpGetPasswds			string = HttpPath + "/%UID%/passwords"
+// HTTPPath - Veeam Enterprise Manager API Path for list of backupServers
+const HTTPPath string = "/backupServers"
 
+// HTTPGetJobs - Veeam Enterprise Manager API Path for list of jobs
+var HTTPGetJobs = HTTPPath + "/%UID%/jobs"
 
+// HTTPGetRepos - Veeam Enterprise Manager API Path for list of repositories
+var HTTPGetRepos = HTTPPath + "/%UID%/repositories"
+
+// HTTPGetCreds - Veeam Enterprise Manager API Path for list of credentials
+var HTTPGetCreds = HTTPPath + "/%UID%/credentials"
+
+// HTTPGetPasswds - Veeam Enterprise Manager API Path for list of passwords
+var HTTPGetPasswds = HTTPPath + "/%UID%/passwords"
+
+// convertToBackupServers - Convert []Ref to []BackupServers
 func convertToBackupServers(refs []vbemAPI.Ref) []vbemAPI.BackupServers {
 	var tmp []vbemAPI.BackupServers
 	for _, e := range refs {
@@ -29,8 +38,9 @@ func convertToBackupServers(refs []vbemAPI.Ref) []vbemAPI.BackupServers {
 	return tmp
 }
 
-func BackupServers(sessionId string) ([]vbemAPI.BackupServers, error) {
-	q := vbemQuery.New(HttpPath, "GET", sessionId)
+// BackupServers - Get List of Backuo Servers
+func BackupServers(sessionID string) ([]vbemAPI.BackupServers, error) {
+	q := vbemQuery.New(HTTPPath, "GET", sessionID)
 	jsonResp, err := q.Run()
 
 	if err != nil {
@@ -40,25 +50,28 @@ func BackupServers(sessionId string) ([]vbemAPI.BackupServers, error) {
 
 	refs := convertToBackupServers(vbemQuery.ExtractReferencesResponse(jsonResp.Bytes()))
 
-	//refs, _ = BackupServersJob(sessionId, refs)
-	//refs, _ = BackupServersRepos(sessionId, refs)
+	refs, _ = BackupServersJob(sessionID, refs)
+	refs, _ = BackupServersRepos(sessionID, refs)
+	// log.Println("Jobs: ", jobs)
+	// log.Println("Repos: ", repos)
 	//refs, _ = BackupServersCredentials(sessionId, refs)
 
 	return refs, nil
 }
 
-func BackupServersJob(sessionId string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
+// BackupServersJob - Get Listof BackupServersJob
+func BackupServersJob(sessionID string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
 	var tmpRefs []vbemAPI.BackupServers
 	for _, e := range refs {
 		uid := strings.Split(e.UID, ":")
-		path := strings.Replace(HttpGetJobs, "%UID%", uid[len(uid)-1], -1)
-		q := vbemQuery.New(path, "GET", sessionId)
+		path := strings.Replace(HTTPGetJobs, "%UID%", uid[len(uid)-1], -1)
+		q := vbemQuery.New(path, "GET", sessionID)
 		jsonResp, err := q.Run()
 		if err != nil {
 			return refs, err
 		}
 
-		jobs :=  convertToJobs(vbemQuery.ExtractReferencesResponse(jsonResp.Bytes()))
+		jobs := convertToJobs(vbemQuery.ExtractReferencesResponse(jsonResp.Bytes()))
 
 		tmRef := vbemAPI.BackupServers(e)
 		tmRef.Jobs = jobs
@@ -69,18 +82,19 @@ func BackupServersJob(sessionId string, refs []vbemAPI.BackupServers) ([]vbemAPI
 	return tmpRefs, nil
 }
 
-func BackupServersRepos(sessionId string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
+// BackupServersRepos - Get Listof BackupServersRepositories
+func BackupServersRepos(sessionID string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
 	var tmpRefs []vbemAPI.BackupServers
 	for _, e := range refs {
 		uid := strings.Split(e.UID, ":")
-		path := strings.Replace(HttpGetRepos, "%UID%", uid[len(uid)-1], -1)
-		q := vbemQuery.New(path, "GET", sessionId)
+		path := strings.Replace(HTTPGetRepos, "%UID%", uid[len(uid)-1], -1)
+		q := vbemQuery.New(path, "GET", sessionID)
 		jsonResp, err := q.Run()
 		if err != nil {
 			return refs, err
 		}
 
-		repositories :=  convertToRepos(vbemQuery.ExtractReferencesResponse(jsonResp.Bytes()))
+		repositories := convertToRepos(vbemQuery.ExtractReferencesResponse(jsonResp.Bytes()))
 
 		tmRef := vbemAPI.BackupServers(e)
 		tmRef.Repos = repositories
@@ -91,24 +105,23 @@ func BackupServersRepos(sessionId string, refs []vbemAPI.BackupServers) ([]vbemA
 	return tmpRefs, nil
 }
 
-func BackupServersCredentials(sessionId string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
+// BackupServersCredentials - Get Listof BackupServersCredentials
+func BackupServersCredentials(sessionID string, refs []vbemAPI.BackupServers) ([]vbemAPI.BackupServers, error) {
 	var tmpRefs []vbemAPI.BackupServers
 	for _, e := range refs {
 		uid := strings.Split(e.UID, ":")
-		path := strings.Replace(HttpGetCreds, "%UID%", uid[len(uid)-1], -1)
-		q := vbemQuery.New(path, "GET", sessionId)
+		path := strings.Replace(HTTPGetCreds, "%UID%", uid[len(uid)-1], -1)
+		q := vbemQuery.New(path, "GET", sessionID)
 		jsonResp, err := q.Run()
-
-
 
 		if err != nil {
 			return refs, err
 		}
 
-		credentials :=  convertToCredentials(vbemQuery.ExtractCredResponse(jsonResp.Bytes()))
+		credentials := convertToCredentials(vbemQuery.ExtractCredResponse(jsonResp.Bytes()))
 
 		tmRef := vbemAPI.BackupServers(e)
-		tmRef.Creds =  credentials
+		tmRef.Creds = credentials
 
 		tmpRefs = append(tmpRefs, tmRef)
 
@@ -120,7 +133,7 @@ func BackupServersCredentials(sessionId string, refs []vbemAPI.BackupServers) ([
 //	var tmpRefs []vbemAPI.BackupServers
 //	for _, e := range refs {
 //		uid := strings.Split(e.UID, ":")
-//		path := strings.Replace(HttpGetPasswds, "%UID%", uid[len(uid)-1], -1)
+//		path := strings.Replace(HTTPGetPasswds, "%UID%", uid[len(uid)-1], -1)
 //		q := vbemQuery.New(path, "GET", sessionId)
 //		jsonResp, err := q.Run()
 //		if err != nil {
@@ -137,6 +150,3 @@ func BackupServersCredentials(sessionId string, refs []vbemAPI.BackupServers) ([
 //	}
 //	return tmpRefs, nil
 //}
-
-
-

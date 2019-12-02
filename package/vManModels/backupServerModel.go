@@ -12,21 +12,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// BkUpServerCollection - Mongo DB collection name
 const BkUpServerCollection string = "BackupServers"
 
+// BackupServer - BackupServer model
 type BackupServer struct {
-	Id        interface{} `json:"Id" bson:"_id"`
-	Name      string      `json:"Name" bson:"name"`
-	Type      string      `json:"Type" bson:"type"`
-	UID       string      `json:"UID" bson:"uId"`
-	Href      string      `json:"Href" bson:"href"`
-	LastSeen  time.Time   `json:"LastSeen" bson:"lastSeen"`
-	CreatedAt time.Time   `json:"CreatedAt" bson:"createdAt"`
+	ID        interface{}   `json:"Id" bson:"_id"`
+	Name      string        `json:"Name" bson:"name"`
+	Type      string        `json:"Type" bson:"type"`
+	UID       string        `json:"UID" bson:"uId"`
+	Href      string        `json:"Href" bson:"href"`
+	Jobs      []interface{} `json:"Jobs" bson:"jobs"`
+	LastSeen  time.Time     `json:"LastSeen" bson:"lastSeen"`
+	CreatedAt time.Time     `json:"CreatedAt" bson:"createdAt"`
 }
 
+// GetNewEmpty - Get a new Get New Empty instance of Model FindAll method
 func (bs *BackupServer) GetNewEmpty() interface{} {
 	return BackupServer{}
 }
+
+// Valid - Validate Model
 func (bs *BackupServer) Valid() (vManValidators.ValidationResult, bool) {
 	vs := vManValidators.ValidationResult{
 		Errors: nil,
@@ -43,7 +49,7 @@ func (bs *BackupServer) Valid() (vManValidators.ValidationResult, bool) {
 		vs.Errors = append(vs.Errors, ve)
 	}
 
-	var ch bool = true
+	var ch = true
 	if vs.Count > 0 {
 		ch = false
 	}
@@ -51,7 +57,8 @@ func (bs *BackupServer) Valid() (vManValidators.ValidationResult, bool) {
 	return vs, ch
 }
 
-func (bs *BackupServer) UpdateLastSeen() (*mongo.UpdateResult, bool) {
+// UpdateBackupServerLastSeen - Update Last Seen
+func (bs *BackupServer) UpdateBackupServerLastSeen() (*mongo.UpdateResult, bool) {
 	filter := bson.M{
 		"uId": bson.M{
 			"$eq": bs.UID,
@@ -68,13 +75,38 @@ func (bs *BackupServer) UpdateLastSeen() (*mongo.UpdateResult, bool) {
 
 	if err != nil {
 		return nil, false
-	} else {
-		return result, true
 	}
+
+	return result, true
 
 }
 
+// UpdateBackupServerJobList - Update Jobs related to backupServer
+func (bs *BackupServer) UpdateBackupServerJobList(jobIDs []interface{}) (*mongo.UpdateResult, bool) {
+	filter := bson.M{
+		"uId": bson.M{
+			"$eq": bs.UID,
+		},
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"jobs": jobIDs,
+		},
+	}
+
+	result, err := UpdateOne(BkUpServerCollection, filter, update)
+
+	if err != nil {
+		return nil, false
+	}
+
+	return result, true
+}
+
+// StoreOrUpdateBackupServers - Store if not exist and update LastSeen if it's exist
 func StoreOrUpdateBackupServers(refs []vbemAPI.BackupServers) {
+
 	for _, bkup := range refs {
 		bs := BackupServer{
 			Name: bkup.Name,
@@ -82,13 +114,49 @@ func StoreOrUpdateBackupServers(refs []vbemAPI.BackupServers) {
 			UID:  bkup.UID,
 			Href: bkup.Href,
 		}
-		bs.Id = primitive.NewObjectID()
+
+		var jobObjectIds []interface{}
+		for _, jb := range bkup.Jobs {
+			job := Job{
+				Name: jb.Name,
+				Type: jb.Type,
+				UID:  jb.UID,
+				Href: jb.Href,
+			}
+			shouldInsert, job := ShouldStoreOrShouldUpdateJob(job)
+			var ior *mongo.InsertOneResult
+			var oID interface{}
+			var jobRes Job
+
+			if shouldInsert {
+				ior, _ = InsertOne(JobsCollection, job)
+			} else {
+				_, _ = job.UpdateJobLastSeen()
+				_, _ = FindOne(JobsCollection, bson.D{{Key: "uId", Value: jb.UID}}, &jobRes)
+			}
+
+			// var jobId interface{}
+			if shouldInsert {
+				oID = ior.InsertedID
+			} else {
+				oID = jobRes.ID
+			}
+
+			jobObjectIds = append(jobObjectIds, oID)
+
+		}
+
+		bs.ID = primitive.NewObjectID()
+
 		if _, validationResult := bs.Valid(); validationResult {
+			bs.Jobs = jobObjectIds
 			bs.CreatedAt = time.Now()
 			bs.LastSeen = time.Now()
 			_, _ = InsertOne(BkUpServerCollection, bs)
 		} else {
-			_, _ = bs.UpdateLastSeen()
+			_, _ = bs.UpdateBackupServerJobList(jobObjectIds)
+
+			_, _ = bs.UpdateBackupServerLastSeen()
 		}
 	}
 }

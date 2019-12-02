@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/context"
 )
 
+// GetAll - Get All Rows
 func GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
