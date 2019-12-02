@@ -29,11 +29,13 @@ func (r *Row) GetNewEmpty() Row {
 // RowsForUI - An struct for providing rows information for UI
 type RowsForUI struct {
 	BackupServers []BackupServer `json:"BackupServers"`
+	Jobs          []Job          `json:"Jobs"`
 }
 
 // PrepareRowsForUI - prepare row information for UI (FrontEnd)
 func (rc *RowsForUI) PrepareRowsForUI() {
 	rc.BackupServers = getBackupServers()
+	rc.Jobs = getJobs()
 }
 
 // getBackupServers - Get List of BackupServers
@@ -62,4 +64,32 @@ func getBackupServers() []BackupServer {
 	}
 
 	return backupServers
+}
+
+// getJobs - Get List of Jobs
+func getJobs() []Job {
+	res, err := FindAll(JobsCollection, bson.D{})
+
+	if err != nil {
+		log.Println("Error getting All", err)
+		return []Job{}
+	}
+
+	var jobs []Job
+	for _, v := range res {
+		var j Job
+		mr, err := bson.Marshal(v)
+		if err != nil {
+			continue
+		}
+		err = bson.Unmarshal(mr, &j)
+		if err != nil {
+			continue
+		}
+		j.ID = j.ID.(primitive.ObjectID).String()
+		j.ID = strings.TrimLeft(strings.TrimRight(j.ID.(string), "\")"), "ObjectID(\"")
+		jobs = append(jobs, j)
+	}
+
+	return jobs
 }
