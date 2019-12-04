@@ -70,6 +70,7 @@ func GetADashboards(w http.ResponseWriter, r *http.Request) {
 	//ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
 	var rr models.ResponseResult
 	objectId := models.GetObjectId(mux.Vars(r)["objectId"])
+	log.Println(objectId)
 
 	var user models.User
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
@@ -156,5 +157,75 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(res)
 
 	return
+
+}
+
+// UpdateDashboardLayout - update or store dashboard layouts
+func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	var user models.User
+
+	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); !ok {
+		res := models.ResponseResult{
+			Error:  "Token is invalid!",
+			Result: "",
+		}
+		_ = json.NewEncoder(w).Encode(res)
+		return
+	}
+
+	var dashboardLayouts models.DashboardLayout
+	var res models.ResponseResult
+
+	body, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(body, &dashboardLayouts)
+
+	// log.Println(dashboardLayouts)
+
+	if err != nil {
+		res.Error = err.Error()
+		_ = json.NewEncoder(w).Encode(res)
+		return
+	}
+
+	// log.Println(models.GetObjectId(dashboardLayouts.DashboardID.(string)))
+
+	if exist := dashboardLayouts.IsDashboardIDExist(); !exist {
+		res = models.ResponseResult{
+			Error:  "Invalid Dashboard Id!",
+			Result: "",
+		}
+		_ = json.NewEncoder(w).Encode(res)
+		return
+	}
+
+	if layoutExist := dashboardLayouts.IsDashboardLayoutExist(); !layoutExist {
+		// Add new
+		_, err := models.InsertOne(models.DashboardLayoutCollection, dashboardLayouts)
+		if err != nil {
+			res = models.ResponseResult{
+				Error:  "Can not add layout!",
+				Result: err,
+			}
+			_ = json.NewEncoder(w).Encode(res)
+			return
+		}
+		res = models.ResponseResult{
+			Error:  "",
+			Result: dashboardLayouts,
+		}
+		_ = json.NewEncoder(w).Encode(res)
+		return
+
+	} else {
+		// Update
+		res = models.ResponseResult{
+			Error:  "UPDATE",
+			Result: dashboardLayouts,
+		}
+		_ = json.NewEncoder(w).Encode(res)
+		return
+	}
 
 }
