@@ -12,7 +12,9 @@ import (
 
 // InsertOne - Insert one element to Database Collection
 func InsertOne(collectionName string, model interface{}) (*mongo.InsertOneResult, error) {
-	collection, err := db.GetDBCollection(collectionName)
+	collection, client, err := db.GetDBCollection(collectionName)
+
+	defer db.CloseDBConnection(client)
 
 	if err != nil {
 		return nil, err
@@ -46,11 +48,11 @@ func InsertOne(collectionName string, model interface{}) (*mongo.InsertOneResult
 //	return result, nil
 //}
 
-/**
-FindOne - Query database for one result
-*/
+// FindOne - Query database for one result
 func FindOne(collectionName string, bsonFilter bson.D, result interface{}) (interface{}, error) {
-	collection, err := db.GetDBCollection(collectionName)
+	collection, client, err := db.GetDBCollection(collectionName)
+
+	defer db.CloseDBConnection(client)
 
 	if err != nil {
 		return nil, err
@@ -65,11 +67,11 @@ func FindOne(collectionName string, bsonFilter bson.D, result interface{}) (inte
 	return result, nil
 }
 
-/**
-FindAll - Query database for All result
-*/
+// FindAll - Query database for All result
 func FindAll(collectionName string, bsonFilter bson.D) ([]interface{}, error) {
-	collection, err := db.GetDBCollection(collectionName)
+	collection, client, err := db.GetDBCollection(collectionName)
+
+	defer db.CloseDBConnection(client)
 
 	if err != nil {
 		return nil, err
@@ -99,8 +101,12 @@ func FindAll(collectionName string, bsonFilter bson.D) ([]interface{}, error) {
 	return result, nil
 }
 
+// UpdateOne - Update one row
 func UpdateOne(collectionName string, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
-	collection, err := db.GetDBCollection(collectionName)
+	collection, client, err := db.GetDBCollection(collectionName)
+
+	defer db.CloseDBConnection(client)
+
 	if err != nil {
 		return nil, err
 	}
@@ -108,9 +114,7 @@ func UpdateOne(collectionName string, filter interface{}, update interface{}) (*
 	return collection.UpdateOne(context.TODO(), filter, update)
 }
 
-/**
-Get Mongo DB Object Id From string
-*/
+// GetObjectId - Get Mongo DB Object Id From string
 func GetObjectId(hexStrObjectId string) primitive.ObjectID {
 	objectId, err := primitive.ObjectIDFromHex(hexStrObjectId)
 	if err != nil {

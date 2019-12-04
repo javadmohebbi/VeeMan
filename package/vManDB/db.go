@@ -24,7 +24,7 @@ func getMongoURI() (string, string) {
 	return fmt.Sprintf("mongodb://%s:%v", conf.MongoDB.Host, conf.MongoDB.Port), conf.MongoDB.Database
 }
 
-func GetDBCollection(collection string) (*mongo.Collection, error) {
+func GetDBCollection(collection string) (*mongo.Collection, *mongo.Client, error) {
 
 	uri, dbName := getMongoURI()
 	//log.Println(uri, dbName)
@@ -33,17 +33,25 @@ func GetDBCollection(collection string) (*mongo.Collection, error) {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	retCollection := client.Database(dbName).Collection(collection)
 
-	client.Disconnect(ctx)
+	return retCollection, client, nil
+}
 
-	return retCollection, nil
+// CloseDBConnection
+func CloseDBConnection(client *mongo.Client) {
+	err := client.Disconnect(context.TODO())
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	// log.Println("Connection to MongoDB closed.")
 }

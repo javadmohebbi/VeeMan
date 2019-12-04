@@ -4,14 +4,15 @@ import (
 	"Ticketing/packages/constants"
 	models "VeeamManager/package/vManModels"
 	"encoding/json"
-	ctx "github.com/gorilla/context"
-	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+
+	ctx "github.com/gorilla/context"
+	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
@@ -23,23 +24,25 @@ func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
 		e := bson.D{
-			{ Key: "ownerId", Value: user.Id, },
+			{Key: "ownerId", Value: user.Id},
 		}
 		// var modelType = models.Dashboard{}
 		// res, err := models.FindAll(models.DashboardCollection, e, modelType.GetNewEmpty)
 		res, err := models.FindAll(models.DashboardCollection, e)
 		// log.Println("resssssssssssssssss ======>             ", res)
 		if err != nil {
-			log.Println(err)
+			log.Println("Find All Error ", err)
 		}
 		var dashboards []models.Dashboard
-		for _,v := range res {
+		for _, v := range res {
 			var d models.Dashboard
 			mr, err := bson.Marshal(v)
 			err = bson.Unmarshal(mr, &d)
-			if err != nil { continue }			
+			if err != nil {
+				continue
+			}
 			d.Id = d.Id.(primitive.ObjectID).String()
-			d.Id = strings.TrimLeft(strings.TrimRight(d.Id.(string),"\")"),"ObjectID(\"")
+			d.Id = strings.TrimLeft(strings.TrimRight(d.Id.(string), "\")"), "ObjectID(\"")
 			dashboards = append(dashboards, d)
 		}
 		rr = models.ResponseResult{
@@ -49,7 +52,6 @@ func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 
 		_ = json.NewEncoder(w).Encode(rr)
 		return
-
 
 	} else {
 		rr = models.ResponseResult{
@@ -67,15 +69,14 @@ func GetADashboards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	//ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
 	var rr models.ResponseResult
-	objectId :=  models.GetObjectId(mux.Vars(r)["objectId"])
+	objectId := models.GetObjectId(mux.Vars(r)["objectId"])
 
 	var user models.User
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
 		e := bson.D{
-			{ Key: "ownerId", Value: user.Id, },
-			{ Key: "_id", Value:  objectId, },
+			{Key: "ownerId", Value: user.Id},
+			{Key: "_id", Value: objectId},
 		}
-
 
 		var dashboard models.Dashboard
 		_, err := models.FindOne(models.DashboardCollection, e, &dashboard)
@@ -84,7 +85,6 @@ func GetADashboards(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 
-
 		rr = models.ResponseResult{
 			Error:  false,
 			Result: dashboard,
@@ -92,7 +92,6 @@ func GetADashboards(w http.ResponseWriter, r *http.Request) {
 
 		_ = json.NewEncoder(w).Encode(rr)
 		return
-
 
 	} else {
 		rr = models.ResponseResult{
@@ -140,13 +139,10 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	dashboard.OwnerId = user.Id
 	ior, err := models.InsertOne(models.DashboardCollection, dashboard)
 
-
-
-
 	if err != nil {
 		re := models.ResponseError{
-			Code:    constants.ErrCodeInsertOne,
-			Message: strings.Replace(constants.MsgErrorInsertOne, "%COLLECTION%", models.DashboardCollection, -1),
+			Code:          constants.ErrCodeInsertOne,
+			Message:       strings.Replace(constants.MsgErrorInsertOne, "%COLLECTION%", models.DashboardCollection, -1),
 			OriginalError: err,
 		}
 		res.Error = re
@@ -160,6 +156,5 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(res)
 
 	return
-
 
 }
