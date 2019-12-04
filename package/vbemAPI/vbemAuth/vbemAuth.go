@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -14,12 +15,12 @@ import (
 	"time"
 )
 
-const LoginPATH 	string = "/sessionMngr/?v=latest"
-const HttpMethod	string = "POST"
+const LoginPATH string = "/sessionMngr/?v=latest"
+const HttpMethod string = "POST"
 
 /**
 Login to REST API & save session to file
- */
+*/
 func Login() (vbemAPI.LogonSession, error) {
 
 	q := vbemQuery.New(LoginPATH, HttpMethod, "")
@@ -40,7 +41,7 @@ func Login() (vbemAPI.LogonSession, error) {
 	}
 
 	if ls.LogonSession.SessionId == "" {
-		return  vbemAPI.LogonSession{}, fmt.Errorf("username or password is not valid to login to server")
+		return vbemAPI.LogonSession{}, fmt.Errorf("username or password is not valid to login to server")
 	}
 
 	ls.LogonSession.ValidTo = time.Now().UnixNano()
@@ -49,17 +50,16 @@ func Login() (vbemAPI.LogonSession, error) {
 	return ls.LogonSession, nil
 }
 
-
 /**
 Validate Session Time
 if > 15m will return false
- */
+*/
 func Validate(session vbemAPI.LogonSession) bool {
-	
+
 	if session.SessionId == "" {
 		return false
 	}
-	
+
 	to := time.Now()
 
 	from := time.Unix(0, session.ValidTo)
@@ -77,40 +77,47 @@ func Validate(session vbemAPI.LogonSession) bool {
 
 /**
 Write session to file
- */
+*/
 func writeToFile(session vbemAPI.LogonSession) {
 	conf, err := vManConfig.ReadConfig()
 	if err != nil {
 		log.Fatal("Cant read config", err)
 	}
 
-
-
-	f, err := os.OpenFile(conf.VbEntMgr.SessionPath, os.O_CREATE | os.O_RDWR, os.ModePerm)
+	// f, err := os.OpenFile(conf.VbEntMgr.SessionPath, os.O_CREATE|os.O_RDWR, os.ModePerm)
+	f, err := os.Create(conf.VbEntMgr.SessionPath)
 	if err != nil {
+		closeFile(f)
 		log.Fatal("Cant create session file", err)
 	}
-	defer f.Close()
 
-	_, err = f.WriteString(fmt.Sprintf("%v\t%v\t%v", session.SessionId, session.Username, session.ValidTo))
+	// _, err = f.WriteString(fmt.Sprintf("%v\t%v\t%v", session.SessionId, session.Username, session.ValidTo))
+	_, err = io.WriteString(f, fmt.Sprintf("%v\t%v\t%v", session.SessionId, session.Username, session.ValidTo))
 
 	if err != nil {
+		closeFile(f)
 		log.Fatal("Cant write to session file", err)
 	}
+
+	defer closeFile(f)
 }
 
 /**
 Read Session From File
- */
-func ReadSession() vbemAPI.LogonSession{
+*/
+func ReadSession() vbemAPI.LogonSession {
 	conf, err := vManConfig.ReadConfig()
 	if err != nil {
 		log.Fatal("Cant read config", err)
 	}
 
 	f, err := os.OpenFile(conf.VbEntMgr.SessionPath, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatal("Cant read session", err)
+	}
 
-	defer f.Close()
+	// defer f.Close()
+	defer closeFile(f)
 
 	scanner := bufio.NewScanner(f)
 	var ls vbemAPI.LogonSession
@@ -123,9 +130,18 @@ func ReadSession() vbemAPI.LogonSession{
 
 		if err == nil {
 			ls.ValidTo = d
-		} else { ls.ValidTo = -1 }
+		} else {
+			ls.ValidTo = -1
+		}
 
 		break
 	}
 	return ls
+}
+
+func closeFile(f *os.File) {
+	err := f.Close()
+	if err != nil {
+		log.Println("can not close file", err)
+	}
 }

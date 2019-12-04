@@ -4,13 +4,14 @@ import (
 	"VeeamManager/package/vManConfig"
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func getMongoURI () (string, string){
+func getMongoURI() (string, string) {
 	conf, err := vManConfig.ReadConfig()
 	if err != nil {
 		log.Fatal("read config error: ", err)
@@ -23,8 +24,7 @@ func getMongoURI () (string, string){
 	return fmt.Sprintf("mongodb://%s:%v", conf.MongoDB.Host, conf.MongoDB.Port), conf.MongoDB.Database
 }
 
-
-func GetDBCollection (collection string) (*mongo.Collection, error) {
+func GetDBCollection(collection string) (*mongo.Collection, error) {
 
 	uri, dbName := getMongoURI()
 	//log.Println(uri, dbName)
@@ -42,6 +42,8 @@ func GetDBCollection (collection string) (*mongo.Collection, error) {
 	}
 
 	retCollection := client.Database(dbName).Collection(collection)
+
+	client.Disconnect(ctx)
+
 	return retCollection, nil
 }
-

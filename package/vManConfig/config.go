@@ -1,54 +1,53 @@
 package vManConfig
 
 import (
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"runtime"
+
+	"github.com/spf13/viper"
 )
 
 // Configurations struct
 type Configurations struct {
-	Server 				ServerConfigurations
-	MongoDB 			MongoDBConfigurations
-	VbEntMgr			VeeamEntMgrConfigurations
+	Server   ServerConfigurations
+	MongoDB  MongoDBConfigurations
+	VbEntMgr VeeamEntMgrConfigurations
 }
 
 // ServerConfigurations struct
 type ServerConfigurations struct {
-	Address 		string
-	Port 			int
-	StaticPath		string
+	Address    string
+	Port       int
+	StaticPath string
 }
 
 // MongoDBConfigurations struct
 type MongoDBConfigurations struct {
-	Host 			string
-	Port 			int
-	Username 		string
-	Password 		string
-	Database 		string
+	Host     string
+	Port     int
+	Username string
+	Password string
+	Database string
 }
 
 // VeeamEntMgrConfigurations struct
 type VeeamEntMgrConfigurations struct {
-	Protocol		string
-	Host 			string
-	Port 			int
-	Username 		string
-	Password 		string
-	Timeout			int64
-	SessionPath		string
+	Protocol    string
+	Host        string
+	Port        int
+	Username    string
+	Password    string
+	Timeout     int64
+	SessionPath string
 }
-
-
-
 
 var (
 	configDevPath      string = "/home/mj/go/src/VeeamManager/config/"
 	configDevName      string = "vman"
 	configDevExtension string = "yaml"
 )
+
 const DummyIsDev bool = true
 
 // ReadConfig - ReadConfig & Return Configurations struct
@@ -67,13 +66,15 @@ func ReadConfig() (Configurations, error) {
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Printf("Error reading config file, %s", err)
-		return conf, err
+		panic(err)
+		// return conf, err
 	}
 	err := viper.Unmarshal(&conf)
 	if err != nil {
 		log.Printf("Unable to decode into struct, %v", err)
 		return conf, err
 	}
+
 	return conf, err
 }
 
@@ -90,5 +91,3 @@ func PrepareConfigPath() string {
 	log.Fatal("Read configs from: ", configDevPath)
 	return configDevPath
 }
-
-

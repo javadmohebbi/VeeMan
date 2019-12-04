@@ -4,35 +4,37 @@ import (
 	"VeeamManager/package/vbemAPI"
 	"bytes"
 	"encoding/base64"
-	xml2json "github.com/basgys/goxml2json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	xml2json "github.com/basgys/goxml2json"
 )
 
 type Query struct {
-	Path				string
-	HttpMethod			string
-	SessionId			string
-	Type				string
+	Path       string
+	HttpMethod string
+	SessionId  string
+	Type       string
 }
-
 
 func New(path string, method string, session string) *Query {
 	return &Query{
 		Path:       path,
 		HttpMethod: method,
-		SessionId: session,
-		Type: "xml",
+		SessionId:  session,
+		Type:       "xml",
 	}
 }
 
-func (q *Query) Run() (*bytes.Buffer, error){
+func (q *Query) Run() (*bytes.Buffer, error) {
 	bc := vbemAPI.GetBase()
 
-	if q.Type == "" { q.Type = "xml" }
+	if q.Type == "" {
+		q.Type = "xml"
+	}
 
 	tm := time.Duration(time.Duration(bc.Timeout) * time.Second)
 
@@ -40,7 +42,7 @@ func (q *Query) Run() (*bytes.Buffer, error){
 		Timeout: tm,
 	}
 
-	req, err := http.NewRequest(q.HttpMethod, bc.BaseURI + q.Path, nil)
+	req, err := http.NewRequest(q.HttpMethod, bc.BaseURI+q.Path, nil)
 
 	if q.Type == "xml" {
 		req.Header.Set("Content-Type", "application/xml")
@@ -51,24 +53,25 @@ func (q *Query) Run() (*bytes.Buffer, error){
 	if q.SessionId == "" {
 		req.SetBasicAuth(bc.Username, bc.Password)
 	} else {
-		enc :=  base64.StdEncoding.EncodeToString([]byte(q.SessionId))
+		enc := base64.StdEncoding.EncodeToString([]byte(q.SessionId))
 		req.Header.Set("X-RestSvcSessionId", enc)
 	}
-
 
 	if err != nil {
 		log.Println("Can not create http request ", err)
 		return nil, err
 	}
 
-
 	resp, err := client.Do(req)
 
 	if err != nil {
 		log.Println("Can not send http request ", err)
+		err = resp.Body.Close()
+		if err != nil {
+			log.Println("Can not close resp Body", err)
+		}
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -83,22 +86,13 @@ func (q *Query) Run() (*bytes.Buffer, error){
 		return jsOrg, nil
 	}
 
-
-
 	jsonResp, err := xml2json.Convert(strings.NewReader(string(body)))
 	if err != nil {
 		log.Println("Can read convert XML to JSON ", err)
 		return nil, err
 	}
 
+	strJSON := strings.Replace(jsonResp.String(), "\"-", "\"", -1)
 
-
-	strJson := strings.Replace(jsonResp.String(), "\"-", "\"", -1)
-
-
-	return bytes.NewBuffer([]byte(strJson)), nil
+	return bytes.NewBuffer([]byte(strJSON)), nil
 }
-
-
-
-
