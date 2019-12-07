@@ -102,7 +102,7 @@ func GetADashboard(w http.ResponseWriter, r *http.Request) {
 		var dashboardLayouts models.DashboardLayout
 		_, _ = models.FindOne(models.DashboardLayoutCollection, e, &dashboardLayouts)
 
-		log.Printf("\n \n =============== %v  ========== \n \n", dashboardLayouts.Layouts)
+		// log.Printf("\n \n =============== %v  ========== \n \n", dashboardLayouts.Layouts)
 
 		drr := models.DashboardReponseResult{
 			Error:   false,
@@ -261,8 +261,9 @@ func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(res)
 		return
 	}
+
 	res = models.ResponseResult{
-		Error:  "",
+		Error:  false,
 		Result: dashboardLayouts,
 	}
 	_ = json.NewEncoder(w).Encode(res)
