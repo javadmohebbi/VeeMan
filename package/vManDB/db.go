@@ -5,8 +5,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -24,13 +27,18 @@ func getMongoURI() (string, string) {
 	return fmt.Sprintf("mongodb://%s:%v", conf.MongoDB.Host, conf.MongoDB.Port), conf.MongoDB.Database
 }
 
+// GetDBCollection - get collection
 func GetDBCollection(collection string) (*mongo.Collection, *mongo.Client, error) {
 
 	uri, dbName := getMongoURI()
 	//log.Println(uri, dbName)
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+
+	rb := bson.NewRegistryBuilder()
+	rb.RegisterTypeMapEntry(bsontype.EmbeddedDocument, reflect.TypeOf(bson.M{}))
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri).SetRegistry(rb.Build()))
 
 	if err != nil {
 		return nil, nil, err
@@ -46,7 +54,7 @@ func GetDBCollection(collection string) (*mongo.Collection, *mongo.Client, error
 	return retCollection, client, nil
 }
 
-// CloseDBConnection
+// CloseDBConnection - end client connection
 func CloseDBConnection(client *mongo.Client) {
 	err := client.Disconnect(context.TODO())
 

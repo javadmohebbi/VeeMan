@@ -40,7 +40,7 @@ func UI(r *mux.Router) {
 	//r.Use(middleware.VbEntMgrLogonSessionMidWare)
 
 	r.HandleFunc("/dashboards", vManDashboardsController.GetUserDashboards).Methods("GET")
-	r.HandleFunc("/dashboards/get/{objectId}", vManDashboardsController.GetADashboards).Methods("GET")
+	r.HandleFunc("/dashboards/get/{objectId}", vManDashboardsController.GetADashboard).Methods("GET")
 
 	r.HandleFunc("/dashboards/create", vManDashboardsController.Create).Methods("POST")
 	r.HandleFunc("/dashboards/create/layout", vManDashboardsController.UpdateDashboardLayout).Methods("POST")

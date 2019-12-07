@@ -15,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// GetUserDashboards - Get All dashboards related to a user
 func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
@@ -37,6 +38,9 @@ func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 		for _, v := range res {
 			var d models.Dashboard
 			mr, err := bson.Marshal(v)
+			if err != nil {
+				continue
+			}
 			err = bson.Unmarshal(mr, &d)
 			if err != nil {
 				continue
@@ -53,58 +57,74 @@ func GetUserDashboards(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(rr)
 		return
 
-	} else {
-		rr = models.ResponseResult{
-			Error:  "Token is invalid!",
-			Result: "",
-		}
-		_ = json.NewEncoder(w).Encode(rr)
-		return
 	}
+
+	rr = models.ResponseResult{
+		Error:  "Token is invalid!",
+		Result: "",
+	}
+	_ = json.NewEncoder(w).Encode(rr)
+	return
 
 }
 
-func GetADashboards(w http.ResponseWriter, r *http.Request) {
+// GetADashboard - Get a dashboard
+func GetADashboard(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 	//ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
 	var rr models.ResponseResult
-	objectId := models.GetObjectId(mux.Vars(r)["objectId"])
-	log.Println(objectId)
+	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
 
 	var user models.User
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
 		e := bson.D{
 			{Key: "ownerId", Value: user.Id},
-			{Key: "_id", Value: objectId},
+			{Key: "_id", Value: objectID},
 		}
 
 		var dashboard models.Dashboard
 		_, err := models.FindOne(models.DashboardCollection, e, &dashboard)
 
 		if err != nil {
-			log.Println(err)
+			rr = models.ResponseResult{
+				Error:  "Can not get dashboard Info!",
+				Result: "",
+			}
+			_ = json.NewEncoder(w).Encode(rr)
+			return
 		}
 
-		rr = models.ResponseResult{
-			Error:  false,
-			Result: dashboard,
+		e = bson.D{
+			{Key: "dashboardId", Value: mux.Vars(r)["objectId"]},
 		}
 
-		_ = json.NewEncoder(w).Encode(rr)
+		var dashboardLayouts models.DashboardLayout
+		_, _ = models.FindOne(models.DashboardLayoutCollection, e, &dashboardLayouts)
+
+		log.Printf("\n \n =============== %v  ========== \n \n", dashboardLayouts.Layouts)
+
+		drr := models.DashboardReponseResult{
+			Error:   false,
+			Result:  dashboard,
+			Layouts: dashboardLayouts.Layouts,
+		}
+
+		_ = json.NewEncoder(w).Encode(drr)
 		return
 
-	} else {
-		rr = models.ResponseResult{
-			Error:  "Token is invalid!",
-			Result: "",
-		}
-		_ = json.NewEncoder(w).Encode(rr)
-		return
 	}
+
+	rr = models.ResponseResult{
+		Error:  "Token is invalid!",
+		Result: "",
+	}
+	_ = json.NewEncoder(w).Encode(rr)
+	return
 
 }
 
+// Create - Create a new dashboard
 func Create(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
@@ -179,9 +199,8 @@ func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
 	var res models.ResponseResult
 
 	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &dashboardLayouts)
 
-	// log.Println(dashboardLayouts)
+	err := json.Unmarshal(body, &dashboardLayouts)
 
 	if err != nil {
 		res.Error = err.Error()
@@ -218,14 +237,35 @@ func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(res)
 		return
 
-	} else {
-		// Update
+	}
+
+	// Update
+	filter := bson.M{
+		"dashboardId": bson.M{
+			"$eq": dashboardLayouts.DashboardID,
+		},
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"layouts": dashboardLayouts.Layouts,
+		},
+	}
+
+	_, err = models.UpdateOne(models.DashboardLayoutCollection, filter, update)
+	if err != nil {
 		res = models.ResponseResult{
-			Error:  "UPDATE",
-			Result: dashboardLayouts,
+			Error:  "Can not add layout!",
+			Result: err,
 		}
 		_ = json.NewEncoder(w).Encode(res)
 		return
 	}
+	res = models.ResponseResult{
+		Error:  "",
+		Result: dashboardLayouts,
+	}
+	_ = json.NewEncoder(w).Encode(res)
+	return
 
 }

@@ -12,7 +12,7 @@ const DashboardLayoutCollection string = "DashboardLayouts"
 // DashboardLayout - RowLayout Model
 type DashboardLayout struct {
 	DashboardID interface{} `json:"DashboardId" bson:"dashboardId"`
-	Layouts     interface{} `json:"layouts" bson:"layouts"`
+	Layouts     interface{} `json:"Layouts" bson:"layouts"`
 	UpdatedAt   time.Time   `json:"UpdatedAt" bson:"updateAt"`
 	CreatedAt   time.Time   `json:"CreatedAt" bson:"createdAt"`
 }
