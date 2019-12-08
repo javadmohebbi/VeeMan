@@ -7,6 +7,7 @@ import (
 	"VeeamManager/package/vManControllers/vManEntMgrController"
 	"VeeamManager/package/vManControllers/vManRowsController"
 	UsersController "VeeamManager/package/vManControllers/vManUsersController"
+	"VeeamManager/package/vManControllers/vManWidgetsController"
 	middleware "VeeamManager/package/vManMiddlewares"
 
 	"github.com/gorilla/mux"
@@ -50,5 +51,7 @@ func UI(r *mux.Router) {
 
 	r.HandleFunc("/dashboards/chart/data/get", middleware.VbEntMgrLogonSession(vManChartsController.GetChartData)).Methods("POST")
 	r.HandleFunc("/dashboards/chart/data/set", middleware.VbEntMgrLogonSession(vManChartsController.SetChartData)).Methods("POST")
+
+	r.HandleFunc("/dashboards/chart/widget/get/{objectId}", middleware.VbEntMgrLogonSession(vManWidgetsController.GetWidgetInfo)).Methods("GET")
 
 }
