@@ -2,6 +2,7 @@ package vManRoutes
 
 import (
 	AuthController "VeeamManager/package/vManControllers/vManAuthController"
+	"VeeamManager/package/vManControllers/vManChartsController"
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
 	"VeeamManager/package/vManControllers/vManRowsController"
@@ -20,7 +21,7 @@ func Auth(r *mux.Router) {
 	r.HandleFunc("/profile", middleware.ValidateTokenMiddleware(UsersController.Profile)).Methods("GET")
 }
 
-// API Calls
+// VbEntMgr - API Calls
 func VbEntMgr(r *mux.Router) {
 
 	// CallAPIs
@@ -33,7 +34,7 @@ func VbEntMgr(r *mux.Router) {
 
 }
 
-// UI
+// UI - Routes related to UI
 func UI(r *mux.Router) {
 
 	r.Use(middleware.ValidateTokenMiddlewareUse)
@@ -46,5 +47,8 @@ func UI(r *mux.Router) {
 	r.HandleFunc("/dashboards/create/layout", vManDashboardsController.UpdateDashboardLayout).Methods("POST")
 
 	r.HandleFunc("/rows", middleware.VbEntMgrLogonSession(vManRowsController.GetAll)).Methods("GET")
+
+	r.HandleFunc("/dashboards/chart/data/get", middleware.VbEntMgrLogonSession(vManChartsController.GetChartData)).Methods("POST")
+	r.HandleFunc("/dashboards/chart/data/set", middleware.VbEntMgrLogonSession(vManChartsController.SetChartData)).Methods("POST")
 
 }
