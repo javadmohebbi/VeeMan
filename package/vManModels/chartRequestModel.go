@@ -69,10 +69,13 @@ type WantType int
 const (
 	// JobsCount - Get Jobs Count
 	JobsCount WantType = 0
+
+	// RepoCount - Get Repositories Count
+	RepoCount WantType = 1
 )
 
 func (wt WantType) String() string {
-	return [...]string{"jobCount"}[wt]
+	return [...]string{"jobCount", "repoCount"}[wt]
 }
 
 //
@@ -144,37 +147,6 @@ func (c *ChartDataRequest) getDbCollectionAndModel() (string, interface{}) {
 	return "", nil
 }
 
-// getWantedData - extract wanted data
-func (c *ChartDataRequest) getWantedData(theModel interface{}) interface{} {
-	switch c.Want.Type {
-	case JobsCount.String():
-		mrs, err := bson.Marshal(theModel)
-		if err != nil {
-			return SingleDataReponseModel{
-				Error:        true,
-				ErrorMessage: err.Error(),
-			}
-		}
-		var bs BackupServer
-		err = bson.Unmarshal(mrs, &bs)
-		if err != nil {
-			return SingleDataReponseModel{
-				Error:        true,
-				ErrorMessage: err.Error(),
-			}
-		}
-		return SingleDataReponseModel{
-			Error: false,
-			I18n:  c.Want.I18n,
-			Stat:  len(bs.Jobs),
-		}
-	}
-
-	return SingleDataReponseModel{
-		Error: true,
-	}
-}
-
 // getFilterByUID - get filter bson.D based on UID
 func (c *ChartDataRequest) getFilterByUID() primitive.D {
 	filter := bson.D{
@@ -182,4 +154,81 @@ func (c *ChartDataRequest) getFilterByUID() primitive.D {
 	}
 
 	return filter
+}
+
+// getWantedData - extract wanted data
+func (c *ChartDataRequest) getWantedData(theModel interface{}) interface{} {
+	switch c.Want.Type {
+
+	case JobsCount.String():
+		return c.fetchJobCount(theModel)
+	case RepoCount.String():
+		return c.fetchRepoCount(theModel)
+	}
+
+	return SingleDataReponseModel{
+		Error: true,
+	}
+}
+
+//
+//
+//
+//
+//
+//
+// FETCH THINGS :-D (Well documented :)) )
+//
+//
+//
+//
+//
+//
+
+// fetchJobCount - Fetch Single Stat JobsCount
+func (c *ChartDataRequest) fetchJobCount(theModel interface{}) interface{} {
+	mrs, err := bson.Marshal(theModel)
+	if err != nil {
+		return SingleDataReponseModel{
+			Error:        true,
+			ErrorMessage: err.Error(),
+		}
+	}
+	var bs BackupServer
+	err = bson.Unmarshal(mrs, &bs)
+	if err != nil {
+		return SingleDataReponseModel{
+			Error:        true,
+			ErrorMessage: err.Error(),
+		}
+	}
+	return SingleDataReponseModel{
+		Error: false,
+		I18n:  c.Want.I18n,
+		Stat:  len(bs.Jobs),
+	}
+}
+
+// fetchRepoCount - Fetch Single Stat RepositoriesCount
+func (c *ChartDataRequest) fetchRepoCount(theModel interface{}) interface{} {
+	mrs, err := bson.Marshal(theModel)
+	if err != nil {
+		return SingleDataReponseModel{
+			Error:        true,
+			ErrorMessage: err.Error(),
+		}
+	}
+	var bs BackupServer
+	err = bson.Unmarshal(mrs, &bs)
+	if err != nil {
+		return SingleDataReponseModel{
+			Error:        true,
+			ErrorMessage: err.Error(),
+		}
+	}
+	return SingleDataReponseModel{
+		Error: false,
+		I18n:  c.Want.I18n,
+		Stat:  len(bs.Repos),
+	}
 }
