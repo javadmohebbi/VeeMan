@@ -50,23 +50,23 @@ func (d *Dashboard) Valid() (vManValidators.ValidationResult, bool) {
 		}
 	}
 
-	if !vManValidators.Empty(d.Desc) {
-		ve.Message = strings.Replace(vManConstants.MsgIsRequired, "%FIELD%", vManConstants.FldDesc, -1)
-		ve.Code = vManConstants.ErrCodeIsRequired
-		ve.Field = vManConstants.FldDesc
-		vs.Count = vs.Count + 1
-		vs.Errors = append(vs.Errors, ve)
-	} else {
-		if !vManValidators.Length(d.Desc, 10, 100) {
-			ve.Message = strings.Replace(vManConstants.MsgMustBeBetween, "%FIELD%", vManConstants.FldDesc, -1)
-			ve.Message = strings.Replace(ve.Message, "%FROM%", "10", -1)
-			ve.Message = strings.Replace(ve.Message, "%TO%", "100", -1)
-			ve.Code = vManConstants.ErrCodeLength
-			ve.Field = vManConstants.FldDesc
-			vs.Count = vs.Count + 1
-			vs.Errors = append(vs.Errors, ve)
-		}
-	}
+	// if !vManValidators.Empty(d.Desc) {
+	// 	ve.Message = strings.Replace(vManConstants.MsgIsRequired, "%FIELD%", vManConstants.FldDesc, -1)
+	// 	ve.Code = vManConstants.ErrCodeIsRequired
+	// 	ve.Field = vManConstants.FldDesc
+	// 	vs.Count = vs.Count + 1
+	// 	vs.Errors = append(vs.Errors, ve)
+	// } else {
+	// 	if !vManValidators.Length(d.Desc, 10, 100) {
+	// 		ve.Message = strings.Replace(vManConstants.MsgMustBeBetween, "%FIELD%", vManConstants.FldDesc, -1)
+	// 		ve.Message = strings.Replace(ve.Message, "%FROM%", "10", -1)
+	// 		ve.Message = strings.Replace(ve.Message, "%TO%", "100", -1)
+	// 		ve.Code = vManConstants.ErrCodeLength
+	// 		ve.Field = vManConstants.FldDesc
+	// 		vs.Count = vs.Count + 1
+	// 		vs.Errors = append(vs.Errors, ve)
+	// 	}
+	// }
 
 	var ch bool = true
 	if vs.Count > 0 {

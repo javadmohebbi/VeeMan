@@ -114,6 +114,25 @@ func UpdateOne(collectionName string, filter interface{}, update interface{}) (*
 	return collection.UpdateOne(context.TODO(), filter, update)
 }
 
+// DeleteOne - Delete one row
+func DeleteOne(collectionName string, filter interface{}) (*mongo.DeleteResult, error) {
+	collection, client, err := db.GetDBCollection(collectionName)
+
+	defer db.CloseDBConnection(client)
+
+	if err != nil {
+		return nil, err
+	}
+
+	dr, err := collection.DeleteOne(context.TODO(), filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return dr, nil
+}
+
 // GetObjectId - Get Mongo DB Object Id From string
 func GetObjectId(hexStrObjectId string) primitive.ObjectID {
 	objectId, err := primitive.ObjectIDFromHex(hexStrObjectId)

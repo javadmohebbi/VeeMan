@@ -255,7 +255,7 @@ func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
 	_, err = models.UpdateOne(models.DashboardLayoutCollection, filter, update)
 	if err != nil {
 		res = models.ResponseResult{
-			Error:  "Can not add layout!",
+			Error:  "Can not update layout!",
 			Result: err,
 		}
 		_ = json.NewEncoder(w).Encode(res)
@@ -267,6 +267,193 @@ func UpdateDashboardLayout(w http.ResponseWriter, r *http.Request) {
 		Result: dashboardLayouts,
 	}
 	_ = json.NewEncoder(w).Encode(res)
+	return
+
+}
+
+// Delete - Delete a dashboard
+func Delete(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	var user models.User
+	var dashboard models.Dashboard
+	var rr models.ResponseResult
+
+	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+
+	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); !ok {
+		rr = models.ResponseResult{
+			Error:  "Token is invalid!",
+			Result: "",
+		}
+		_ = json.NewEncoder(w).Encode(rr)
+		return
+	}
+
+	filter := bson.D{
+		{Key: "ownerId", Value: user.Id},
+		{Key: "_id", Value: objectID},
+	}
+
+	_, err := models.FindOne(models.DashboardCollection, filter, &dashboard)
+	if err != nil {
+		rr = models.ResponseResult{
+			Error:  "Can not get dashboard Info!",
+			Result: "",
+		}
+		_ = json.NewEncoder(w).Encode(rr)
+		return
+	}
+
+	filter = bson.D{
+		{Key: "dashboardId", Value: mux.Vars(r)["objectId"]},
+	}
+	var dashboardLayouts models.DashboardLayout
+	_, _ = models.FindOne(models.DashboardLayoutCollection, filter, &dashboardLayouts)
+
+	msr, _ := bson.Marshal(dashboardLayouts.Layouts)
+	var unmarshalledLayout map[string]interface{}
+	_ = bson.Unmarshal(msr, &unmarshalledLayout)
+
+	var wgIDs []string
+	for _, element := range unmarshalledLayout {
+
+		if pa, ok := element.(primitive.A); ok {
+			valueMSI := []interface{}(pa)
+			for _, e := range valueMSI {
+				for i, w := range e.(map[string]interface{}) {
+					if i == "i" {
+						chk := false
+						for _, wgID := range wgIDs {
+							if wgID == w {
+								chk = true
+							}
+						}
+						if !chk {
+							wgIDs = append(wgIDs, w.(string))
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// DELETE WIDGETS
+	for _, wd := range wgIDs {
+		filter = bson.D{
+			{Key: "itemId", Value: wd},
+		}
+		_, _ = models.DeleteOne(models.WidgetCollection, filter)
+	}
+
+	// Delete Dashboard Layout
+	filter = bson.D{
+		{Key: "dashboardId", Value: mux.Vars(r)["objectId"]},
+	}
+	_, _ = models.DeleteOne(models.DashboardLayoutCollection, filter)
+
+	// Delete Dashboard
+	filter = bson.D{
+		{Key: "_id", Value: objectID},
+	}
+	dr, err := models.DeleteOne(models.DashboardCollection, filter)
+
+	if err != nil {
+		rr = models.ResponseResult{
+			Error:  "Can not delete dashboard! Layouts and widgets might not be accessible anymore.",
+			Result: "",
+		}
+		_ = json.NewEncoder(w).Encode(rr)
+		return
+	}
+
+	rr = models.ResponseResult{
+		Error:  false,
+		Result: dr,
+	}
+	_ = json.NewEncoder(w).Encode(rr)
+
+	return
+
+}
+
+// UpdateTitle - Update dashboard title
+func UpdateTitle(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("content-type", "application/json")
+	//ls := context.Get(r, vbemAPI.VbEntMgrContextKey).(vbemAPI.LogonSession)
+	var rr models.ResponseResult
+	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+
+	var user models.User
+	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
+		e := bson.D{
+			{Key: "ownerId", Value: user.Id},
+			{Key: "_id", Value: objectID},
+		}
+
+		var dashboard models.Dashboard
+		_, err := models.FindOne(models.DashboardCollection, e, &dashboard)
+
+		if err != nil {
+			rr = models.ResponseResult{
+				Error:  "Can not get dashboard Info!",
+				Result: "",
+			}
+			_ = json.NewEncoder(w).Encode(rr)
+			return
+		}
+
+		var reqName models.Dashboard
+		var res models.ResponseResult
+
+		body, _ := ioutil.ReadAll(r.Body)
+		err = json.Unmarshal(body, &reqName)
+
+		if err != nil {
+			res.Error = err.Error()
+			_ = json.NewEncoder(w).Encode(res)
+			return
+		}
+
+		// Update
+		filter := bson.M{
+			"_id": bson.M{
+				"$eq": objectID,
+			},
+		}
+
+		update := bson.M{
+			"$set": bson.M{
+				"name": reqName.Name,
+			},
+		}
+
+		_, err = models.UpdateOne(models.DashboardCollection, filter, update)
+		if err != nil {
+			res = models.ResponseResult{
+				Error:  "Can not Update layout!",
+				Result: err,
+			}
+			_ = json.NewEncoder(w).Encode(res)
+			return
+		}
+
+		dashboard.Name = reqName.Name
+		res = models.ResponseResult{
+			Error:  false,
+			Result: dashboard,
+		}
+		_ = json.NewEncoder(w).Encode(res)
+		return
+
+	}
+
+	rr = models.ResponseResult{
+		Error:  "Token is invalid!",
+		Result: "",
+	}
+	_ = json.NewEncoder(w).Encode(rr)
 	return
 
 }
