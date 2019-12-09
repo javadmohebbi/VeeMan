@@ -5,6 +5,7 @@ import (
 	"VeeamManager/package/vManControllers/vManChartsController"
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
+	"VeeamManager/package/vManControllers/vManJobsController"
 	"VeeamManager/package/vManControllers/vManRowsController"
 	UsersController "VeeamManager/package/vManControllers/vManUsersController"
 	"VeeamManager/package/vManControllers/vManWidgetsController"
@@ -32,6 +33,8 @@ func VbEntMgr(r *mux.Router) {
 	r.HandleFunc("/test", vManEntMgrController.CallAPI).Methods("POST")
 
 	r.HandleFunc("/backupServers", vManEntMgrController.BackupServers).Methods("POST")
+
+	r.HandleFunc("/jobs/detail", vManJobsController.GetJobsDetail).Methods("Get")
 
 }
 
