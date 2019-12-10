@@ -5,8 +5,8 @@ import (
 	"VeeamManager/package/vManControllers/vManChartsController"
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
-	"VeeamManager/package/vManControllers/vManJobsController"
 	"VeeamManager/package/vManControllers/vManRowsController"
+	"VeeamManager/package/vManControllers/vManStatisticsController"
 	UsersController "VeeamManager/package/vManControllers/vManUsersController"
 	"VeeamManager/package/vManControllers/vManWidgetsController"
 	middleware "VeeamManager/package/vManMiddlewares"
@@ -34,7 +34,7 @@ func VbEntMgr(r *mux.Router) {
 
 	r.HandleFunc("/backupServers", vManEntMgrController.BackupServers).Methods("POST")
 
-	r.HandleFunc("/jobs/detail", vManJobsController.GetJobsDetail).Methods("Get")
+	// r.HandleFunc("/statistics/jobs", vManJobsController.GetJobStatistics).Methods("Get")
 
 }
 
@@ -44,9 +44,9 @@ func UI(r *mux.Router) {
 	r.Use(middleware.ValidateTokenMiddlewareUse)
 	//r.Use(middleware.VbEntMgrLogonSessionMidWare)
 
+	// Dashboards Routes
 	r.HandleFunc("/dashboards", vManDashboardsController.GetUserDashboards).Methods("GET")
 	r.HandleFunc("/dashboards/get/{objectId}", vManDashboardsController.GetADashboard).Methods("GET")
-
 	r.HandleFunc("/dashboards/create", vManDashboardsController.Create).Methods("POST")
 	r.HandleFunc("/dashboards/update/title/{objectId}", vManDashboardsController.UpdateTitle).Methods("PUT")
 	r.HandleFunc("/dashboards/delete/{objectId}", vManDashboardsController.Delete).Methods("DELETE")
@@ -54,9 +54,14 @@ func UI(r *mux.Router) {
 
 	r.HandleFunc("/rows", middleware.VbEntMgrLogonSession(vManRowsController.GetAll)).Methods("GET")
 
+	// Statistics Routes
+	r.HandleFunc("/statistics/summary/overview",
+		middleware.VbEntMgrLogonSession(vManStatisticsController.GetSummaryOverview)).Methods("GET")
+
+	// Charts Routes
 	r.HandleFunc("/dashboards/chart/data/get", middleware.VbEntMgrLogonSession(vManChartsController.GetChartData)).Methods("POST")
 	r.HandleFunc("/dashboards/chart/data/set", middleware.VbEntMgrLogonSession(vManChartsController.SetChartData)).Methods("POST")
-
-	r.HandleFunc("/dashboards/chart/widget/get/{objectId}", middleware.VbEntMgrLogonSession(vManWidgetsController.GetWidgetInfo)).Methods("GET")
+	r.HandleFunc("/dashboards/chart/widget/get/{objectId}",
+		middleware.VbEntMgrLogonSession(vManWidgetsController.GetWidgetInfo)).Methods("GET")
 
 }

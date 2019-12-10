@@ -92,7 +92,7 @@ type ChartDataRequest struct {
 	Type         string               `json:"type"`
 	RelatedTo    RelatedToDataRequest `json:"relatedTo"`
 	Where        WhereDataRequest     `json:"where"`
-	Want         WantDataRequest      `json:"want"`
+	Want         WantDataRequest      `json:"chart"`
 	CSSClasses   interface{}          `json:"cssClasses"`
 	ChartPayload interface{}          `json:"chartPayload"`
 }

@@ -1,7 +1,7 @@
 package vManDashboardsController
 
 import (
-	"Ticketing/packages/constants"
+	"VeeamManager/package/vManConstants"
 	models "VeeamManager/package/vManModels"
 	"encoding/json"
 	"io/ioutil"
@@ -162,8 +162,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		re := models.ResponseError{
-			Code:          constants.ErrCodeInsertOne,
-			Message:       strings.Replace(constants.MsgErrorInsertOne, "%COLLECTION%", models.DashboardCollection, -1),
+			Code:          vManConstants.ErrCodeInsertOne,
+			Message:       strings.Replace(vManConstants.MsgErrorInsertOne, "%COLLECTION%", models.DashboardCollection, -1),
 			OriginalError: err,
 		}
 		res.Error = re
