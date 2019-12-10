@@ -17,6 +17,47 @@ type SummaryOverview struct {
 	WarningVMLastestStates    string `json:"WarningVmLastestStates"`
 }
 
+// VMsOverviewReportFrame - Virtual Machines Summary Overview parent node
+type VMsOverviewReportFrame struct {
+	Summary VMsSummaryOverview `json:"VmsOverviewReportFrame"`
+}
+
+// VMsSummaryOverview - VMs Summary overview struct
+type VMsSummaryOverview struct {
+	ProtectedVMs                string `json:"ProtectedVms"`
+	BackedUpVMs                 string `json:"BackedUpVms"`
+	ReplicatedVMs               string `json:"ReplicatedVms"`
+	RestorePoints               string `json:"RestorePoints"`
+	FullBackupPointsSize        string `json:"FullBackupPointsSize"`
+	IncrementalBackupPointsSize string `json:"IncrementalBackupPointsSize"`
+	ReplicaRestorePointsSize    string `json:"ReplicaRestorePointsSize"`
+	SourceVMsSize               string `json:"SourceVmsSize"`
+	SuccessBackupPercents       string `json:"SuccessBackupPercents"`
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 // JobStatisticsReportFrame - JobStatistics parent node
 type JobStatisticsReportFrame struct {
 	StatisticsRepoFrame JobStatistics `json:"JobStatisticsReportFrame"`
