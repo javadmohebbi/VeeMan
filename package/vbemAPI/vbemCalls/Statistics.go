@@ -13,6 +13,9 @@ const HTTPSummaryOverviewPath string = "/reports/summary/overview"
 // HTTPVMsSummaryOverviewPath - VMs summary overview path
 const HTTPVMsSummaryOverviewPath string = "/reports/summary/vms_overview"
 
+// HTTPVMsJobsStatisticsPath - Jobs Statistics Path
+const HTTPVMsJobsStatisticsPath string = "/reports/summary/job_statistics"
+
 // SummaryOverview - get summary overview from veeam ent. Manager
 func SummaryOverview(sessionID string) (vbemAPI.SummaryOverview, error) {
 	q := vbemQuery.New(HTTPSummaryOverviewPath, "GET", sessionID)
@@ -53,4 +56,25 @@ func VMsSummaryOverview(sessionID string) (vbemAPI.VMsSummaryOverview, error) {
 	}
 
 	return vorf.Summary, nil
+}
+
+// SummaryStatistics - get summary statistics from veeam ent. Manager
+func SummaryJobStatistics(sessionID string) (vbemAPI.JobStatisticsReport, error) {
+	q := vbemQuery.New(HTTPVMsJobsStatisticsPath, "GET", sessionID)
+	jsonResp, err := q.Run()
+
+	if err != nil {
+		log.Println("Can read convert XML to JSON ", err)
+		return vbemAPI.JobStatisticsReport{}, err
+	}
+
+	var orf vbemAPI.JobStatisticsReportFrame
+
+	err = json.Unmarshal(jsonResp.Bytes(), &orf)
+	if err != nil {
+		log.Println("Can unmarshal JSON to struct", err)
+		return vbemAPI.JobStatisticsReport{}, err
+	}
+
+	return orf.Summary, nil
 }

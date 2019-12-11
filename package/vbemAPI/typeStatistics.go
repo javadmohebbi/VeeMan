@@ -35,47 +35,69 @@ type VMsSummaryOverview struct {
 	SuccessBackupPercents       string `json:"SuccessBackupPercents"`
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-// JobStatisticsReportFrame - JobStatistics parent node
+// JobStatisticsReportFrame - Job Statistics parent node
 type JobStatisticsReportFrame struct {
-	StatisticsRepoFrame JobStatistics `json:"JobStatisticsReportFrame"`
+	Summary JobStatisticsReport `json:"JobStatisticsReportFrame"`
 }
 
-// JobStatistics - struct for job Statistics
-type JobStatistics struct {
+// JobStatisticsReport - JobStatistics struct
+type JobStatisticsReport struct {
+	RunningJobs               string `json:"RunningJobs"`
 	ScheduledJobs             string `json:"ScheduledJobs"`
 	ScheduledBackupJobs       string `json:"ScheduledBackupJobs"`
 	ScheduledReplicaJobs      string `json:"ScheduledReplicaJobs"`
+	TotalJobRuns              string `json:"TotalJobRuns"`
 	SuccessfulJobRuns         string `json:"SuccessfulJobRuns"`
 	WarningsJobRuns           string `json:"WarningsJobRuns"`
-	RunningJobs               string `json:"RunningJobs"`
-	TotalJobRuns              string `json:"TotalJobRuns"`
+	FailedJobRuns             string `json:"FailedJobRuns"`
 	MaxJobDuration            string `json:"MaxJobDuration"`
 	MaxBackupJobDuration      string `json:"MaxBackupJobDuration"`
+	MaxReplicaJobDuration     string `json:"MaxReplicaJobDuration"`
 	MaxDurationBackupJobName  string `json:"MaxDurationBackupJobName"`
 	MaxDurationReplicaJobName string `json:"MaxDurationReplicaJobName"`
-	FailedJobRuns             string `json:"FailedJobRuns"`
-	MaxReplicaJobDuration     string `json:"MaxReplicaJobDuration"`
 }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// // JobStatisticsReportFrame - JobStatistics parent node
+// type JobStatisticsReportFrame struct {
+// 	StatisticsRepoFrame JobStatistics `json:"JobStatisticsReportFrame"`
+// }
+//
+// // JobStatistics - struct for job Statistics
+// type JobStatistics struct {
+// 	ScheduledJobs             string `json:"ScheduledJobs"`
+// 	ScheduledBackupJobs       string `json:"ScheduledBackupJobs"`
+// 	ScheduledReplicaJobs      string `json:"ScheduledReplicaJobs"`
+// 	SuccessfulJobRuns         string `json:"SuccessfulJobRuns"`
+// 	WarningsJobRuns           string `json:"WarningsJobRuns"`
+// 	RunningJobs               string `json:"RunningJobs"`
+// 	TotalJobRuns              string `json:"TotalJobRuns"`
+// 	MaxJobDuration            string `json:"MaxJobDuration"`
+// 	MaxBackupJobDuration      string `json:"MaxBackupJobDuration"`
+// 	MaxDurationBackupJobName  string `json:"MaxDurationBackupJobName"`
+// 	MaxDurationReplicaJobName string `json:"MaxDurationReplicaJobName"`
+// 	FailedJobRuns             string `json:"FailedJobRuns"`
+// 	MaxReplicaJobDuration     string `json:"MaxReplicaJobDuration"`
+// }
