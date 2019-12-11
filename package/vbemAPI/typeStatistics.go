@@ -57,6 +57,20 @@ type JobStatisticsReport struct {
 	MaxDurationReplicaJobName string `json:"MaxDurationReplicaJobName"`
 }
 
+// ProcessedVMsReportFrame - Processed VMs parent node
+type ProcessedVMsReportFrame struct {
+	Summary ProcessedVMsOverview `json:"ProcessedVmsReportFrame"`
+}
+
+// ProcessedVMsOverview - ProcessedVMs Overview struct
+type ProcessedVMsOverview struct {
+	Day []struct {
+		BackupedVMs   string `json:"BackupedVms"`
+		ReplicatedVMs string `json:"ReplicatedVms"`
+		Timestamp     string `json:"Timestamp"`
+	} `json:"Day"`
+}
+
 //
 //
 //
