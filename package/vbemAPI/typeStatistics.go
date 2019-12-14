@@ -71,6 +71,25 @@ type ProcessedVMsOverview struct {
 	} `json:"Day"`
 }
 
+// RepositoryReportFrame - Repository parent node
+type RepositoryReportFrame struct {
+	Summary RepositoryOverview `json:"RepositoryReportFrame"`
+}
+
+// RepositoryOverview - Repository Overview struct
+type RepositoryOverview struct {
+	Period []RepositoryPeriodOverview `json:"Period"`
+}
+
+// RepositoryPeriodOverview - Repository Period Overview struct
+type RepositoryPeriodOverview struct {
+	Name        string `json:"Name"`
+	Capacity    string `json:"Capacity"`
+	FreeSpace   string `json:"FreeSpace"`
+	BackupSize  string `json:"BackupSize"`
+	FreePercent string `json:"FreePercent"`
+}
+
 //
 //
 //

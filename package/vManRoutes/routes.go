@@ -63,6 +63,8 @@ func UI(r *mux.Router) {
 		middleware.VbEntMgrLogonSession(vManStatisticsController.GetStatistics)).Methods("GET")
 	r.HandleFunc("/statistics/summary/processed_vms",
 		middleware.VbEntMgrLogonSession(vManStatisticsController.GetProtectedVMsOverview)).Methods("GET")
+	r.HandleFunc("/statistics/summary/repository",
+		middleware.VbEntMgrLogonSession(vManStatisticsController.GetRepositorySummary)).Methods("GET")
 
 	// Charts Routes
 	r.HandleFunc("/dashboards/chart/data/get", middleware.VbEntMgrLogonSession(vManChartsController.GetChartData)).Methods("POST")
