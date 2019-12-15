@@ -457,3 +457,77 @@ func UpdateTitle(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
+
+// SaveDefaultDashboard - save default dash
+// func SaveDefaultDashboard(w http.ResponseWriter, r *http.Request) {
+// 	var rr models.ResponseResult
+//
+// 	w.Header().Set("content-type", "application/json")
+// 	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+//
+// 	e := bson.D{
+// 		{Key: "_id", Value: objectID},
+// 	}
+//
+// 	var dashboard models.Dashboard
+// 	_, err := models.FindOne(models.DashboardCollection, e, &dashboard)
+//
+// 	arr := [39]string{
+// 		"col0f64276b0-1b61-11ea-a8bb-f93252122488",
+// 		"col149f10a60-1b62-11ea-b35f-b560347bbb18",
+// 		"col5b90e79a0-1b62-11ea-9ef3-1d118598db4c",
+// 		"col266be6480-1b62-11ea-8285-4fe1dfd24c67",
+// 		"col4998b9c70-1b62-11ea-bdfd-a30d0488dc89",
+// 		"col37b924570-1b62-11ea-b3e5-11bfd74063f3",
+// 		"col7273ec9c0-1b63-11ea-825a-074b1eef5e87",
+// 		"col6fa7332a0-1b62-11ea-a9e8-3900536b089d",
+// 		"col82c5dabb0-1b63-11ea-825a-074b1eef5e87",
+// 		"col981dbcca0-1bce-11ea-8b08-e783983f5f97",
+// 		"col10a1f2d380-1bce-11ea-b439-99d6886df4e6",
+// 		"col11a65b0fa0-1bce-11ea-b439-99d6886df4e6",
+// 		"col12ab062120-1bce-11ea-b439-99d6886df4e6",
+// 		"col184a427130-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col13af722dd0-1bce-11ea-b439-99d6886df4e6",
+// 		"col163679e5c0-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col173b55a430-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col1531e98830-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col142c5b90c0-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col194f61a140-1bcf-11ea-8502-83d5c1f903b3",
+// 		"col21ce183a60-1be0-11ea-8fa0-734e8d4db990",
+// 		"col20c979ac00-1be0-11ea-8fa0-734e8d4db990",
+// 		"col25ef38d2f0-1be9-11ea-963e-b12360bab82f",
+// 		"col26f454ceb0-1be9-11ea-963e-b12360bab82f",
+// 		"col22637b54c0-1be1-11ea-8452-e717392d9fe9",
+// 		"col321bbbc850-1bea-11ea-963e-b12360bab82f",
+// 		"col24eaac6d00-1be9-11ea-963e-b12360bab82f",
+// 		"col28ff730780-1be9-11ea-963e-b12360bab82f",
+// 		"col23a52186c0-1be5-11ea-a878-e992ffe3cb59",
+// 		"col27f96e0b50-1be9-11ea-963e-b12360bab82f",
+// 		"col33216b7890-1bea-11ea-963e-b12360bab82f",
+// 		"col2906cee120-1bea-11ea-963e-b12360bab82f",
+// 		"col31162a0050-1bea-11ea-963e-b12360bab82f",
+// 		"col300d821eb0-1bea-11ea-963e-b12360bab82f",
+// 		"col342bb8f3e0-1bea-11ea-963e-b12360bab82f",
+// 		"col37e15185b0-1e73-11ea-89ad-55f26a93feae",
+// 		"col38f6345850-1f03-11ea-a820-9b0e2334a1fb",
+// 		"col36026d7740-1e65-11ea-9219-17b6cd9085ba",
+// 		"col3531afbf40-1bea-11ea-963e-b12360bab82f",
+// 	}
+//
+// 	var widgets []interface{}
+// 	for _, id := range arr {
+// 		e := bson.D{
+// 			{Key: "itemId", Value: id},
+// 		}
+// 		var widget models.Widget
+// 		_, _ = models.FindOne(models.WidgetCollection, e, &widget)
+// 		widgets = append(widgets, widget)
+// 	}
+//
+// 	rr = models.ResponseResult{
+// 		Error:  err,
+// 		Result: widgets,
+// 	}
+// 	_ = json.NewEncoder(w).Encode(rr)
+// 	return
+// }
