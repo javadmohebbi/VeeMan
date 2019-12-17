@@ -12,6 +12,7 @@ import (
 	"github.com/rs/cors"
 )
 
+// Server - Web server struct
 type Server struct {
 	//ch 				chan bool
 	//waitGroup 		*sync.WaitGroup
@@ -20,6 +21,7 @@ type Server struct {
 	// config vManConfig.Configurations
 }
 
+// New - Create new server
 func New(addr string, port int) *Server {
 	s := &Server{
 		//ch:				make(chan bool),
@@ -31,6 +33,7 @@ func New(addr string, port int) *Server {
 	return s
 }
 
+// Serve - Listen for web request
 func (s *Server) Serve() {
 
 	r := mux.NewRouter()

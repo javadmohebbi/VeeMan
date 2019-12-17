@@ -2,6 +2,7 @@ package vManRoutes
 
 import (
 	AuthController "VeeamManager/package/vManControllers/vManAuthController"
+	"VeeamManager/package/vManControllers/vManBackupServersController"
 	"VeeamManager/package/vManControllers/vManChartsController"
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
@@ -71,5 +72,8 @@ func UI(r *mux.Router) {
 	r.HandleFunc("/dashboards/chart/data/set", middleware.VbEntMgrLogonSession(vManChartsController.SetChartData)).Methods("POST")
 	r.HandleFunc("/dashboards/chart/widget/get/{objectId}",
 		middleware.VbEntMgrLogonSession(vManWidgetsController.GetWidgetInfo)).Methods("GET")
+
+	// BackupServers
+	r.HandleFunc("/backupservers/list", middleware.VbEntMgrLogonSession(vManBackupServersController.List)).Methods("GET")
 
 }
