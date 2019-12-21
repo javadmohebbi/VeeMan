@@ -1,11 +1,8 @@
-# Dependencies
-/bin
-
-
 # Veeam Session
 /config/session
-/bin/*
-/vendor/*
+/bin
+/vendor
+/.idea
 push-to-git.sh
 
 
