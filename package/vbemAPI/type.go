@@ -7,18 +7,13 @@ import (
 const VbEntMgrContextKey string = "vemLogonSession"
 
 type Session struct {
-	LogonSession		LogonSession
+	LogonSession LogonSession
 }
 type LogonSession struct {
-	SessionId			string
-	Username			string
-	ValidTo				int64
+	SessionId string
+	Username  string
+	ValidTo   int64
 }
-
-
-
-
-
 
 type GeneralResponseWrapper struct {
 	//EntityReferences			Response		`json:"EntityReferences"`
@@ -27,18 +22,20 @@ type GeneralResponseWrapper struct {
 
 type Reference struct {
 	RawWrapper struct {
-		Raw			json.RawMessage			`json:"Ref"`
+		Raw json.RawMessage `json:"Ref"`
 	} `json:"Result"`
 
-	Obj				Ref						`json:"Ref"`
-	Arr				[]Ref					`json:"Ref"`
+	Obj Ref   `json:"Ref"`
+	Arr []Ref `json:"Ref"`
 }
 type Ref struct {
-	Name			string			`json:"Name"`
-	Type			string			`json:"Type"`
-	UID				string			`json:"UID"`
-	Href			string			`json:"Href"`
+	Name string `json:"Name"`
+	Type string `json:"Type"`
+	UID  string `json:"UID"`
+	Href string `json:"Href"`
 }
+
+// UnmarshalJSON - alt the Unmarshal Method
 func (g *Reference) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &g.RawWrapper); err != nil {
 		return err
@@ -51,16 +48,3 @@ func (g *Reference) UnmarshalJSON(data []byte) error {
 
 	return json.Unmarshal(g.RawWrapper.Raw, &g.Obj)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

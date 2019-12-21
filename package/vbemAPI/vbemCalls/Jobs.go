@@ -13,6 +13,9 @@ const HTTPJobsPath = "/jobs"
 // HTTPGetAJobInfo - Get information about jobs
 var HTTPGetAJobInfo = HTTPJobsPath + "/%UID%"
 
+// HTTPGetJobBackupSessions - Get job backup session
+var HTTPGetJobBackupSessions = HTTPJobsPath + "/%UID%/backupSessions?format=entities&sortAsc=name"
+
 // convertToJobs - Refs to jobs
 func convertToJobs(refs []vbemAPI.Ref) []vbemAPI.Jobs {
 	var tmp []vbemAPI.Jobs
@@ -58,4 +61,44 @@ func GetJobsRelatedToBackupServer(bkupServerID string, sessionID string) ([]vbem
 	}
 
 	return jobsEntities, nil
+}
+
+// GetJobSessionInfo - get job session info
+func GetJobSessionInfo(jobID string, sessionID string) (interface{}, error) {
+	path := strings.Replace(HTTPGetJobBackupSessions, "%UID%", jobID, -1)
+	q := vbemQuery.New(path, "GET", sessionID)
+	jsonResp, err := q.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	// var jbs vbemAPI.JobBackupSession
+	var jbs map[string]map[string]interface{}
+	_ = json.Unmarshal(jsonResp.Bytes(), &jbs)
+
+	refs := jbs["EntityReferences"]["Ref"]
+
+	nm := ""
+	var uid []string
+
+	switch refs.(type) {
+	case []interface{}:
+		for _, v := range refs.([]interface{}) {
+			nv := v.(map[string]interface{})
+			if nm < nv["Name"].(string) {
+				tmpUUID := nv["UID"].(string)
+				uid = strings.Split(tmpUUID, ":")
+				nm = nv["Name"].(string)
+			}
+		}
+		break
+	case map[string]interface{}:
+		nvo := refs.(map[string]interface{})
+		tmpUUID := nvo["UID"].(string)
+		uid = strings.Split(tmpUUID, ":")
+		break
+	}
+
+	return GetBackupSessionInfo(uid[len(uid)-1], sessionID)
+
 }

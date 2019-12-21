@@ -79,4 +79,7 @@ func UI(r *mux.Router) {
 	r.HandleFunc("/backupserver/{objectId}/jobs",
 		middleware.VbEntMgrLogonSession(vManJobsController.GetJobsRelatedToBackupServer)).Methods("GET")
 
+	r.HandleFunc("/job/{objectId}/backupSession",
+		middleware.VbEntMgrLogonSession(vManJobsController.GetJobsStatus)).Methods("GET")
+
 }
