@@ -25,7 +25,7 @@ const JobLastStateBadge = ({id}) => {
 
 
   const Badge = ({txt}) => {
-    var label = 'default'
+    var label = 'secondary'
     switch (txt) {
       case 'Starting':
         label = 'success'

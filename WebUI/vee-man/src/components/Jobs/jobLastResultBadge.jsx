@@ -25,7 +25,7 @@ const JobLastResultBadge = ({id}) => {
 
 
   const Badge = ({txt}) => {
-    var label = 'default'
+    var label = 'secondary'
     switch (txt) {
       case 'Success':
         label = 'success'
@@ -39,7 +39,7 @@ const JobLastResultBadge = ({id}) => {
       default:
         label = 'default'
     }
-    
+
 
     return (
       <span className={`badge badge-${label}`}>{txt}</span>
