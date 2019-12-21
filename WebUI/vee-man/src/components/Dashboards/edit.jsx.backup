@@ -1,0 +1,154 @@
+import React from 'react'
+import {withTranslation} from 'react-i18next'
+import { getADashboards } from '../../services/dashboards'
+import LightSpinner from '../Loading/Spinner/Light';
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router";
+import {getRows, setRows} from '../../services/localstorage'
+
+const EditDashboard = (props) => {
+
+    const {t} = props
+
+    let h = useHistory();
+
+    let l = useLocation();
+    const showBackButton = l.search === "" ? true : false
+
+
+    const id = props.match.params.id
+
+    const [busy, setBusy] = React.useState(true)
+    const [dashboard, setDashboards] = React.useState({})
+    const [backupServerRows, setRowsBackupServers] = React.useState([])
+
+
+    React.useEffect(() => {
+        getADashboards(id).then(data => {
+            setDashboards(data)
+            setRows()
+            setBusy(false)
+        })
+
+    }, [id])
+
+
+    React.useEffect(() => {
+      if (!busy) {
+        setRowsBackupServers(getRows().BackupServers)
+      }
+    }, [busy])
+
+    React.useEffect(() => {
+
+    }, [backupServerRows])
+
+
+
+    // const handleOpenAddRowModal = (e) => {
+    //   e.preventDefault()
+    //   console.log('clicked')
+    // }
+
+
+
+    return (
+        <div className="container-fluid">
+            <h5 className="page-title pb-3" style={{float: 'left'}} >
+              {
+                showBackButton
+                ?
+                <button className="btn btn-secondary mr-2"
+                    onClick={() => h.goBack()}
+                >
+                    <i className="fas fa-arrow-left"></i>
+                </button>
+                :
+                ''
+              }
+                {t('titles.edit')}: { busy ? <LightSpinner spinnerSize="sm" /> : dashboard.Name }
+            </h5>
+            {
+              backupServerRows.length > 0 ?
+              <div className="page-button" style={{float: 'right'}}>
+                  <div className="btn-group">
+                    <div className="btn btn-primary" data-toggle="modal" data-target="#addRowModal">
+                      {t('general.btn.addRow')}
+                    </div>
+                  </div>
+
+
+
+                  {/* Modal */}
+                  <div className="modal fade bg-dark" id="addRowModal" tabIndex="-1" role="dialog" aria-labelledby="addRowModalTitle" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-scrollable w-100" role="document" style={{maxWidth: '95%'}}>
+                      <div className="modal-content w-100">
+                        <div className="modal-header">
+                          <h5 className="modal-title" id="addRowModalTitle">{t('titles.rows')}</h5>
+                          <button  type="button" className="close text-light" data-dismiss="modal" aria-label="Close">
+                            <i className="fas fa-times"></i>
+                          </button>
+                        </div>
+                        <div className="modal-body">
+                          <table className="table table-dark">
+                            <thead>
+                              <tr>
+                                <th>
+                                  {t('general.inp.name')}
+                                </th>
+                                <th>
+                                  {t('general.inp.type')}
+                                </th>
+                                <th>
+                                  {t('general.inp.id')}
+                                </th>
+                                <th>
+                                  {t('general.inp.operation')}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                backupServerRows.map((k,i) => (
+                                    <tr key={i}>
+                                      <td>
+                                        {k.Name}
+                                      </td>
+                                      <td>
+                                        {k.Type}
+                                      </td>
+                                      <td>
+                                        {k.UID}
+                                      </td>
+                                      <td>
+                                        <button className="btn btn-warning" data-dismiss="modal">
+                                          Add
+                                        </button>
+                                      </td>
+                                    </tr>
+                                ))
+                              }
+                            </tbody>
+
+                          </table>
+
+
+                        </div>
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                          {/*<button type="button" className="btn btn-primary">Save changes</button>*/}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              :
+              ''
+            }
+        </div>
+    )
+
+}
+
+
+export default withTranslation()(EditDashboard)

@@ -1,0 +1,198 @@
+{
+    "general": {
+        "app": {
+            "short": "VeeMan",
+            "long": "VeeMan",
+            "desc": "VeeMan Web UI"
+        },
+        "btn": {
+            "createDashboard": "Create a new dashboard",
+            "edit": "Edit",
+            "delete": "Delete",
+            "save": "Save",
+            "goback": "Go back!",
+            "addRow": "Add Row",
+            "addWidget": "Add Widget",
+            "view": "View",
+            "addPanel": "Add Panel",
+            "panelType": "Type",
+            "from": "From",
+            "where": "Where",
+            "chart": "Chart",
+            "bgColor": "Background Color",
+            "preColor": "Pre-Text Color",
+            "textColor": "Text Color",
+            "postColor": "Post-Text Color",
+            "fontSize": "Font Size",
+            "addFromDefaultWidgets": "Add a Pre-defined Widget",
+            "info": "Info"
+        },
+        "inp": {
+            "email": "Email Address",
+            "name": "Name",
+            "password": "Password",
+            "surname": "Surname",
+            "company": "Company",
+            "website": "Company Website",
+            "country": "Country",
+            "signin": "Sing In",
+            "desc": "Description",
+            "type": "Type",
+            "id": "ID",
+            "operation": "Operation",
+            "title": "Title",
+            "row": "Simple Text",
+            "panel": "Panel",
+            "preText": "Pre-Text",
+            "postText": "Post-Text",
+            "lastSeen": "Last Seen",
+            "type": "Type",
+            "platform": "Platform",
+            "nextRun": "Next Run",
+            "filter": "Filter",
+            "lastState": "Last Status",
+            "lastResult": "Last Result"
+        },
+        "hint": {
+            "name": "Your Name",
+            "surname": "Your Surname",
+            "company": "Your company",
+            "website": "http://example.org",
+            "email": "email@example.org"
+        },
+        "nav": {
+            "home": "Home",
+            "backupservers": "Backup Servers",
+            "jobs": "Jobs"
+        },
+        "slider": {
+
+        },
+        "info": {
+            "deleteDashboard": "By deleting a dashboard, everything related to this dashboard will be removed and WILL NOT be recoverable! If you sure to do it type the further phrase in the text box & press the delete button"
+        },
+        "msg": {
+            "nodashboard": "You have not created any VeeMan Dashboard yet! Please create one! ;-)",
+            "dataSaved": "saved successfully",
+            "dataDeleted": "deleted successfully",
+            "changedTo": "changed to",
+            "na": "Not available now!",
+            "nothingSelected": "Nothing Selected!"
+        },
+        "err": {
+            "list": "Can not get requested list",
+            "auth": {
+                "invalid": "Provided Username or Password is not valid!"
+            },
+            "server": {
+                "connection": "At this moment, we are not able to communicate to server. Please try agian!"
+            },
+            "dashboards": {
+                "all": "Can not get dashboards lists",
+                "one": "Can not get dashboard information from server",
+                "insert": "Can not save dashboard information from server",
+                "delete": "Can not delete dashboard! Layouts and widgets might not be accessible anymore.",
+                "updateTitle": "Can not update dashboard name."
+            },
+            "charts": {
+              "get": "Can not get Chart Info from server",
+              "set": "Can not save Chart Info to server"
+            },
+            "widgets": {
+              "get": "Can not get Panel data from server"
+            },
+            "rows": {
+              "all": "Can not get rows lists"
+            }
+        },
+        "veeam": {
+          "backupserver": "Backup Server",
+          "backupservers": "Backup Servers",
+          "job": "Job",
+          "jobs": "Jobs",
+          "repository": "Repository",
+          "repositories": "Repositories",
+          "chart": {
+            "repositoriesCount": "Repository Count",
+
+            "jobsCount": "Jobs Count",
+            "jobsCount_success": "Jobs Count with Successful status",
+            "jobsCount_failed": "Jobs Count with Failed status",
+            "jobsCount_warning": "Jobs Count with Warning status",
+            "jobsCount_noStat": "Jobs Count with N/A status"
+          },
+          "na": "N/A"
+        }
+    },
+    "titles": {
+        "signin": "Sign In",
+        "signout": "Sign Out",
+        "dashboards": "Dashboards",
+        "dashboard": "Dashboard",
+        "dashboardLayout": "Dashboard Layouts",
+        "edit": "Edit",
+        "delete": "Delete",
+        "rows": "Rows",
+        "widget": "Widget",
+        "relatedTo": "Related to"
+    },
+    "widget": {
+        "backupserver": {
+            "info": {
+                "title": "Backup Server Info",
+                "desc": "Backup Server information summary"
+            }
+        }
+    },
+    "froms": {
+      "reports": "Reports"
+    },
+    "wheres": {
+      "summaryOverview": "Summary Overview",
+      "summaryVmsOverview": "VMs Summary Overview",
+      "summaryStatistics": "Jobs Summary Statistics",
+      "summaryProtectedVms": "Protected VMs Summary Overview",
+      "summaryRepository": "Backup Repositories Overview"
+    },
+    "charts": {
+      "sumOverSuccessfulVmLatestStat": "Successful VMs Lastest States",
+      "sumOverFailedVmLatestStat": "Failed VMs Lastest States",
+      "sumOverBackupServers": "Backup Servers",
+      "sumOverProxyServers": "Proxy Servers",
+      "sumOverRepoServers": "Repository Servers",
+      "sumOverRunningJobs": "Running Jobs",
+      "sumOverScheduledJobs": "Scheduled Jobs",
+      "sumOverWarningVmLatestStat": "Warning VMs Lastest States",
+
+      "vmsSumOverProtectedVms": "Protected VMs",
+      "vmsSumOverBackedUpVms": "BackedUp VMs",
+      "vmsSumOverReplicatedVms": "Replicated VMs",
+      "vmsSumOverRestorePoints": "Restore Points",
+      "vmsSumOverFullBackupPointsSize": "Full Backup Points Size",
+      "vmsSumOverIncrementalBackupPointsSize": "Incremental Backup Points Size",
+      "vmsSumOverReplicaRestorePointsSize": "Replica Restore Points Size",
+      "vmsSumOverSourceVmsSize": "Source VMs Size",
+      "vmsSumOverSuccessBackupPercents": "Success Backup Percents",
+
+      "RunningJobs": "RunningJobs",
+      "ScheduledJobs": "ScheduledJobs",
+      "ScheduledBackupJobs": "ScheduledBackupJobs",
+      "ScheduledReplicaJobs": "ScheduledReplicaJobs",
+      "TotalJobRuns": "TotalJobRuns",
+      "SuccessfulJobRuns": "SuccessfulJobRuns",
+      "WarningsJobRuns": "WarningsJobRuns",
+      "FailedJobRuns": "FailedJobRuns",
+      "MaxJobDuration": "MaxJobDuration",
+      "MaxBackupJobDuration": "MaxBackupJobDuration",
+      "MaxReplicaJobDuration": "MaxReplicaJobDuration",
+      "MaxDurationBackupJobName": "MaxDurationBackupJobName",
+      "MaxDurationReplicaJobName": "MaxDurationReplicaJobName",
+
+      "ProcessedVMs": "Processed Virtual Machines",
+      "ProcessedVMs_BackedUp": "Backuped VMs",
+      "ProcessedVMs_Replicated": "Replicated VMs",
+
+
+      "RepositorySum": "Repository Summary Overview"
+    }
+}

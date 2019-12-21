@@ -1,0 +1,9 @@
+.notfound h1 {
+    font-size: 10rem;
+}
+.notfound h2 {
+    line-height: 2;
+    margin-top: 3.9rem;
+    font-size: 1.2rem;
+    font-weight: normal;
+}

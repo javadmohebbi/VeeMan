@@ -1,0 +1,7 @@
+#footer {
+    border-top: 10px solid #2edfdf;
+    background: rgb(2,0,36);
+    background: linear-gradient(321deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 35%, rgba(3,46,55,1) 100%);    
+    padding-top: 40px;
+    padding-bottom: 40px;
+}

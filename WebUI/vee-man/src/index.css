@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap');
+
+#root {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+html, body, div, h1,h2,h3,h4,h5,h6, span, ul, ol, li, span, a,nav {
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+html, body {
+  background: #000000;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #000000, #1d1d1d);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #000000, #1d1d1d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #f3f3f3;
+  /* #ffe400 */
+}
+
+button > i {
+  margin-inline-end: 0.5rem
+}
+a {
+  color: #ffe400;
+  outline: none;
+}
+a:hover {
+  color: #c3ae00
+}
+
+.btn {
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.2) 49%, rgba(0,0,0,0.15) 51%, rgba(0,0,0,0.05));
+  background-repeat: repeat-x;
+}
+
+
+h1.page-title   {
+  border-bottom: 4px solid rgb(61, 61, 61);
+  font-size: 165%;
+}
+h2.page-title, h3.page-title, h4.page-title, h5.page-title, h6.page-title {
+  border-bottom: 4px solid rgb(61, 61, 61);
+}
+.card{
+  background: rgb(17, 17, 17);
+  border:1px solid #272727
+}
+.modal-content {
+  background: #000000 !important;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #000000, #1d1d1d) !important;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #000000, #1d1d1d) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

@@ -4,3 +4,29 @@
 
 # Veeam Session
 /config/session
+
+
+# WebUI
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/WebUI/vee-man/node_modules
+/WebUI/vee-man/.pnp
+/WebUI/vee-man/.pnp.js
+
+# testing
+/WebUI/vee-man/coverage
+
+# production
+/WebUI/vee-man/build
+
+# misc
+/WebUI/vee-man/.DS_Store
+/WebUI/vee-man/.env.local
+/WebUI/vee-man/.env.development.local
+/WebUI/vee-man/.env.test.local
+/WebUI/vee-man/.env.production.local
+
+/WebUI/vee-man/npm-debug.log*
+/WebUI/vee-man/yarn-debug.log*
+/WebUI/vee-man/yarn-error.log*
