@@ -102,3 +102,56 @@ func GetJobSessionInfo(jobID string, sessionID string) (interface{}, error) {
 	return GetBackupSessionInfo(uid[len(uid)-1], sessionID)
 
 }
+
+// GetJobAllBackupSessionInfo - get job session info
+func GetJobAllBackupSessionInfo(jobID string, sessionID string) (interface{}, error) {
+	path := strings.Replace(HTTPGetJobBackupSessions, "%UID%", jobID, -1)
+	q := vbemQuery.New(path, "GET", sessionID)
+	jsonResp, err := q.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	// var jbs vbemAPI.JobBackupSession
+	var jbs map[string]map[string]interface{}
+	_ = json.Unmarshal(jsonResp.Bytes(), &jbs)
+
+	refs := jbs["EntityReferences"]["Ref"]
+
+	var namesAndUIDs []vbemAPI.NamesAndUUIDJob
+
+	var uid []string
+
+	switch refs.(type) {
+	case []interface{}:
+		for _, v := range refs.([]interface{}) {
+			nv := v.(map[string]interface{})
+			uid = strings.Split(nv["UID"].(string), ":")
+			namesAndUIDs = append(namesAndUIDs, vbemAPI.NamesAndUUIDJob{
+				Name: nv["Name"].(string),
+				UID:  uid[len(uid)-1],
+			})
+		}
+		break
+	case map[string]interface{}:
+		nvo := refs.(map[string]interface{})
+		tmpUUID := nvo["UID"].(string)
+		uid = strings.Split(tmpUUID, ":")
+		namesAndUIDs = append(namesAndUIDs, vbemAPI.NamesAndUUIDJob{
+			Name: nvo["Name"].(string),
+			UID:  uid[len(uid)-1],
+		})
+		break
+	}
+
+	var bjsArr []interface{}
+	for _, k := range namesAndUIDs {
+		bjs, err := GetBackupSessionInfo(k.UID, sessionID)
+		if err == nil {
+			bjsArr = append(bjsArr, bjs.BackupJobSession)
+		}
+	}
+
+	return bjsArr, nil
+
+}

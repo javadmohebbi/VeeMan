@@ -5,23 +5,25 @@ import { GetJobBackupSession } from '../../services/jobs'
 import LightSpinner from '../Loading/Spinner/Light'
 
 
-const JobLastResultBadge = ({id}) => {
+const JobLastResultBadge = ({id, dontFetch=false, txtBadge='N.A'}) => {
 
-  const [busy, setBusy] = React.useState(true)
+  const [busy, setBusy] = React.useState(!dontFetch)
 
-  const [jobState,setJobstate] = React.useState('N.A')
+  const [jobState,setJobstate] = React.useState(txtBadge)
 
   React.useEffect(() => {
-    setBusy(true)
-    GetJobBackupSession(id).then(data => {
-      if (data.hasOwnProperty('error') && data.error === true) {
-        setJobstate('N.A')
-      } else {
-        setJobstate(data.BackupJobSession.Result)
-      }
-      setBusy(false)
-    })
-  }, [id])
+    if (!dontFetch) {
+      setBusy(true)
+      GetJobBackupSession(id).then(data => {
+        if (data.hasOwnProperty('error') && data.error === true) {
+          setJobstate('N.A')
+        } else {
+          setJobstate(data.BackupJobSession.Result)
+        }
+        setBusy(false)
+      })
+    }
+  }, [id,dontFetch])
 
 
   const Badge = ({txt}) => {
@@ -37,7 +39,7 @@ const JobLastResultBadge = ({id}) => {
         label = 'danger'
         break
       default:
-        label = 'default'
+        label = 'secondary'
     }
 
 

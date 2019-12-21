@@ -51,7 +51,10 @@
             "nextRun": "Next Run",
             "filter": "Filter",
             "lastState": "Last Status",
-            "lastResult": "Last Result"
+            "lastResult": "Last Result",
+            "createdAt": "Created At",
+            "endedAt": "Ended At",
+            "progress": "Progress"            
         },
         "hint": {
             "name": "Your Name",

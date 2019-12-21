@@ -46,13 +46,12 @@ type JobsEntity struct {
 // JobBackupSession - struct
 type JobBackupSession struct {
 	EntityReferences struct {
-		// Ref []struct {
-		// 	Name string `json:"Name"`
-		// 	Type string `json:"Type"`
-		// 	UID  string `json:"UID"`
-		// 	Href string `json:"Href"`
-		// 	// Links interface{} `json:"Links"`
-		// } `json:"Ref"`
 		Ref map[string]interface{} `json:"Ref"`
 	} `json:"EntityReferences"`
+}
+
+// NamesAndUUIDJob - struct
+type NamesAndUUIDJob struct {
+	Name string
+	UID  string
 }
