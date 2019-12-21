@@ -1,9 +1,11 @@
 # Veeam Session
 /config/session
+/config/vman.yaml
 /bin
 /vendor
 /.idea
 push-to-git.sh
+
 
 
 # WebUI
