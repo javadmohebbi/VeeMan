@@ -6,6 +6,7 @@
 /config/session
 /bin/*
 /vendor/*
+push-to-git.sh
 
 
 # WebUI
