@@ -9,9 +9,7 @@ const JobLastResultBadge = ({id, dontFetch=false, txtBadge='N.A'}) => {
 
   const [busy, setBusy] = React.useState(!dontFetch)
 
-  const [jobState,setJobstate] = React.useState(txtBadge)
-
-  console.log(txtBadge);
+  const [jobState,setJobstate] = React.useState(txtBadge)  
 
   React.useEffect(() => {
     if (!dontFetch) {
@@ -24,8 +22,10 @@ const JobLastResultBadge = ({id, dontFetch=false, txtBadge='N.A'}) => {
         }
         setBusy(false)
       })
+    } else {
+       setJobstate(txtBadge)
     }
-  }, [id,dontFetch])
+  }, [id,dontFetch, txtBadge])
 
 
   const Badge = ({txt}) => {

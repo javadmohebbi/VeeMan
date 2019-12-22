@@ -1,10 +1,10 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 
+import {Link} from 'react-router-dom'
+
 import {GetJobsRelatedToBackupServerListFromServer} from '../../services/jobs'
-
 import LightSpinner from '../Loading/Spinner/Light'
-
 import VeeManTable from '../Table/table'
 import JobListRow from './tableRow'
 import Toastification from '../Toastification/toastification'
@@ -18,7 +18,7 @@ import './job.css'
 const JobsList = (props) => {
   const {t} = props
 
-  const uid = props.match.params.id
+  const {id=undefined} = props.match.params
 
 
   const containerId = 'jobsListRealatedToBackupServer'
@@ -26,11 +26,13 @@ const JobsList = (props) => {
   const [list, setList] = React.useState([])
   const [busy, setBusy] = React.useState(true)
 
+  const { backPath=null, title=null } = props.location.state || {}
+
 
   // Initialize list
   React.useEffect(() => {
-    if (typeof uid !== 'undefined') {
-      GetJobsRelatedToBackupServerListFromServer(uid).then(data => {
+    if (typeof id !== 'undefined') {
+      GetJobsRelatedToBackupServerListFromServer(id).then(data => {
         if (data.hasOwnProperty('error') && data.error === true) {
           // Handle Errors
           toast.error(data.message, {containerId: containerId})
@@ -40,7 +42,7 @@ const JobsList = (props) => {
         setBusy(false)
       })
     }
-  }, [uid])
+  }, [id])
 
   React.useEffect(() => { document.title = t('general.app.long') + ' | ' + t('general.nav.jobs') }, [t])
 
@@ -71,7 +73,17 @@ const JobsList = (props) => {
       <div className="row">
         <div className="col-12">
             <h1 className="page-title pb-2">
-              {t('general.nav.jobs')}
+
+              {
+                backPath !== null ?
+                <Link className="btn btn-secondary mr-2" to={backPath}>
+                  <i className="fas fa-arrow-left"></i>
+                </Link>
+                :
+                null
+              }
+
+              {t('general.nav.jobs')} <> { title !== null ? <span className="text-warning"> ({title}) </span> : null } </>
               {
                 busy ?
                 <LightSpinner spinnerSize="sm" />

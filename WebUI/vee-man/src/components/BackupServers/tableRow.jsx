@@ -8,7 +8,6 @@ const BackupServerRow = (props) => {
 
   const { t, rows=[] } = props
 
-
   return (
     <>
       {
@@ -18,12 +17,24 @@ const BackupServerRow = (props) => {
             <td>{FormatIntNumbers(row.Jobs.length)}</td>
             <td>{FormatIntNumbers(row.Repositories.length)}</td>
             <td className="btn-group">
-              <Link to={`/mgmt/backupserver/${ExtractUID(row.UID)}/jobs`}
+              <Link to={{
+                  pathname: `/mgmt/backupservers/${ExtractUID(row.UID)}/jobs`,
+                  state: {
+                    title: row.Name,
+                    backPath: '/mgmt/backupservers'
+                  }
+                }}
                 className="btn btn-sm btn-light">
                 <i className="fas fa-tasks mr-1"></i>
                 {t('general.veeam.jobs')}
               </Link>
-              <Link to={`/mgmt/backupserver/${ExtractUID(row.UID)}/repos`}
+              <Link to={{
+                  pathname: `/mgmt/backupservers/${ExtractUID(row.UID)}/repositories`,
+                  state: {
+                    title: row.Name,
+                    backPath: '/mgmt/backupservers'
+                  }
+                }}
                 className="btn btn-sm btn-light">
                 <i className="fas fa-server mr-1"></i>
                 {t('general.veeam.repositories')}

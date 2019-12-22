@@ -5,9 +5,13 @@ import {Link} from 'react-router-dom'
 import JobLastStateBadge from './jobLastStateBadge'
 import JobLastResultBadge from './jobLastResultBadge'
 
+import { useLocation } from 'react-router'
+
 const JobListRow = (props) => {
 
   const { t, rows=[] } = props
+
+  const {pathname=null} = useLocation()
 
   const formatDateStr = (str) => {
     let d = new Date(str)
@@ -15,7 +19,6 @@ const JobListRow = (props) => {
     if (fd === 'Invalid Date') return 'N.A'
     return fd
   }
-
 
   return (
     <>
@@ -30,7 +33,13 @@ const JobListRow = (props) => {
             <td><JobLastStateBadge id={ExtractUID(row.Job.UID)} /></td>
             <td><JobLastResultBadge id={ExtractUID(row.Job.UID)} /></td>
             <td className="btn-group">
-              <Link to={`/mgmt/job/${ExtractUID(row.Job.UID)}/info`}
+              <Link to={{
+                  pathname: `/mgmt/jobs/${ExtractUID(row.Job.UID)}/info`,
+                  state: {
+                    title: row.Job.Name,
+                    backPath: pathname
+                  }
+                }}
                 className="btn btn-sm btn-light">
                 <i className="fas fa-info mr-1"></i>
                 {t('general.btn.info')}

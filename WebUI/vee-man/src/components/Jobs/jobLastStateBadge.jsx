@@ -21,9 +21,11 @@ const JobLastStateBadge = ({id, dontFetch=false, txtBadge='N.A'}) => {
           setJobstate(data.BackupJobSession.State)
         }
         setBusy(false)
-      })
+      })      
+    } else {
+       setJobstate(txtBadge)
     }
-  }, [id, dontFetch])
+  }, [id, dontFetch, txtBadge])
 
 
   const Badge = ({txt}) => {
