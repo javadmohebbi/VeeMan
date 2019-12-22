@@ -7,6 +7,7 @@ import (
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
 	"VeeamManager/package/vManControllers/vManJobsController"
+	"VeeamManager/package/vManControllers/vManQueriesController"
 	"VeeamManager/package/vManControllers/vManRepositoriesController"
 	"VeeamManager/package/vManControllers/vManRowsController"
 	"VeeamManager/package/vManControllers/vManStatisticsController"
@@ -87,5 +88,8 @@ func UI(r *mux.Router) {
 
 	r.HandleFunc("/job/{objectId}/backupSession/all",
 		middleware.VbEntMgrLogonSession(vManJobsController.GetJobAllBackupSession)).Methods("GET")
+
+	r.HandleFunc("/run/raw/query",
+		middleware.VbEntMgrLogonSession(vManQueriesController.RunRawQuery)).Methods("POST")
 
 }
