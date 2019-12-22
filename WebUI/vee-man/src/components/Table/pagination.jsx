@@ -16,14 +16,12 @@ const VeeManTablePagination = (props) => {
         })
       }
 
-      return (
-        <>
+      return (        
         pgs.map((btn, index) => (
           <button key={index} onClick={e => {e.preventDefault(); handleChangePagination(btn.page)} } className={`btn btn-${btn.cls} px-2`}>
             {btn.page}
           </button>
         ))
-        </>
       )
     } else {
       return (

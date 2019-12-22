@@ -91,19 +91,23 @@ const VeeManTable = (props) => {
   return (
     <>
 
-
-    <div className="mr-3 ml-3 mb-3 float-left">
-      <div className="input-group btn-group-sm">
-        <div className="input-group-prepend">
-          <span className="input-group-text" id="basic-addon1"><i className="fas fa-filter"></i></span>
+    {
+      props.list.length ?
+      <div className="mr-3 ml-3 mb-3 float-left">
+        <div className="input-group btn-group-sm">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon1"><i className="fas fa-filter"></i></span>
+          </div>
+          <input type="text" className="form-control" placeholder={t('general.inp.filter')}
+            size="40"
+            aria-label={t('general.inp.filter')}
+            onChange={handleTxtFilterChanged}
+            value={filter} aria-describedby="basic-addon2" />
         </div>
-        <input type="text" className="form-control" placeholder={t('general.inp.filter')}
-          size="40"
-          aria-label={t('general.inp.filter')}
-          onChange={handleTxtFilterChanged}
-          value={filter} aria-describedby="basic-addon2" />
       </div>
-    </div>
+      :
+      null
+    }
 
     <VeeManTablePagination pagination={pagination} handleChangePagination={handleChangePagination} />
 

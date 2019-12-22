@@ -14,7 +14,7 @@ const HTTPJobsPath = "/jobs"
 var HTTPGetAJobInfo = HTTPJobsPath + "/%UID%"
 
 // HTTPGetJobBackupSessions - Get job backup session
-var HTTPGetJobBackupSessions = HTTPJobsPath + "/%UID%/backupSessions?format=entities&sortAsc=name"
+var HTTPGetJobBackupSessions = HTTPJobsPath + "/%UID%/backupSessions?format=entities"
 
 // convertToJobs - Refs to jobs
 func convertToJobs(refs []vbemAPI.Ref) []vbemAPI.Jobs {
