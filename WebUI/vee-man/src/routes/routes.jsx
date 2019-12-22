@@ -14,10 +14,8 @@ import EditWidget from '../components/Dashboards/Widget/editWidgets'
 import JobsList from '../components/Jobs/job'
 import ReposList from '../components/Repositories/repos'
 import JobBackupSession from '../components/Jobs/jobBackupSession'
-/**
- * Management
- */
 import BackupServerList from '../components/BackupServers/list'
+import QueryBuilder from '../components/QueryBuilder/queryBuilder'
 
 
 
@@ -54,6 +52,8 @@ const MainRouter = () => {
                                 <Route exact path="/mgmt/backupservers/:id/repositories" component={ReposList} />
 
                                 <Route exact path="/mgmt/jobs/:id/info" component={JobBackupSession} />
+
+                                <Route exact path="/mgmt/query" component={QueryBuilder} />
 
 
                                 <Route exact path="*" component={NotFound} key="notfound"/>
