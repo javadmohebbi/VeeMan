@@ -70,7 +70,8 @@
             "home": "Home",
             "backupservers": "Backup Servers",
             "jobs": "Jobs",
-            "repositories": "Repositories"
+            "repositories": "Repositories",
+            "query": "Query Builder"
         },
         "slider": {
 

@@ -23,10 +23,10 @@ const MainNav = (props) => {
             icon: 'fas fa-server',
         },
         {
-            title:  t("general.nav.jobs"),
-            key: "/mgmt/jobs",
-            to: '/mgmt/jobs',
-            icon: 'fas fa-tasks',
+            title:  t("general.nav.query"),
+            key: "/mgmt/query",
+            to: '/mgmt/query',
+            icon: 'fas fa-magic',
         }
     ]
 
