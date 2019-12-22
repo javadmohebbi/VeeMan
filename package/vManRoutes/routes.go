@@ -7,6 +7,7 @@ import (
 	"VeeamManager/package/vManControllers/vManDashboardsController"
 	"VeeamManager/package/vManControllers/vManEntMgrController"
 	"VeeamManager/package/vManControllers/vManJobsController"
+	"VeeamManager/package/vManControllers/vManRepositoriesController"
 	"VeeamManager/package/vManControllers/vManRowsController"
 	"VeeamManager/package/vManControllers/vManStatisticsController"
 	UsersController "VeeamManager/package/vManControllers/vManUsersController"
@@ -78,6 +79,8 @@ func UI(r *mux.Router) {
 	r.HandleFunc("/backupservers/list", middleware.VbEntMgrLogonSession(vManBackupServersController.List)).Methods("GET")
 	r.HandleFunc("/backupserver/{objectId}/jobs",
 		middleware.VbEntMgrLogonSession(vManJobsController.GetJobsRelatedToBackupServer)).Methods("GET")
+	r.HandleFunc("/backupserver/{objectId}/repos",
+		middleware.VbEntMgrLogonSession(vManRepositoriesController.GetRepositoriesRelatedToBackupServer)).Methods("GET")
 
 	r.HandleFunc("/job/{objectId}/backupSession",
 		middleware.VbEntMgrLogonSession(vManJobsController.GetJobsStatus)).Methods("GET")
