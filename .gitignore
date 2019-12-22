@@ -1,4 +1,4 @@
-# Veeam Session
+# Veeam backend
 /config/session
 /config/vman.yaml
 /bin
