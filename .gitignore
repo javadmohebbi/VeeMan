@@ -32,3 +32,12 @@ push-to-git.sh
 /WebUI/vee-man/npm-debug.log*
 /WebUI/vee-man/yarn-debug.log*
 /WebUI/vee-man/yarn-error.log*
+
+
+
+
+
+
+# packages and scripts
+/packages
+/scripts
