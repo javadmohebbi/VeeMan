@@ -51,12 +51,12 @@ vbEntMgr:
   port: 9399
 
   # Username
-  username: m.mohebi@mihanins.local
+  username: username
 
   # Password
-  password: hichkareh11(#
+  password: secret
 
   # http request timeout - seconds
   timeout: 10
 
-  sessionPath: /home/mj/go/src/VeeamManager/config/session
+  sessionPath: /path/to/session/file

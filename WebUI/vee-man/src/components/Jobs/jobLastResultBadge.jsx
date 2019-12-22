@@ -11,6 +11,8 @@ const JobLastResultBadge = ({id, dontFetch=false, txtBadge='N.A'}) => {
 
   const [jobState,setJobstate] = React.useState(txtBadge)
 
+  console.log(txtBadge);
+
   React.useEffect(() => {
     if (!dontFetch) {
       setBusy(true)
