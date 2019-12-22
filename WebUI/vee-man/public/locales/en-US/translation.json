@@ -54,7 +54,10 @@
             "lastResult": "Last Result",
             "createdAt": "Created At",
             "endedAt": "Ended At",
-            "progress": "Progress"            
+            "progress": "Progress",
+            "kind": "Kind",
+            "capacity": "Capacity",
+            "freeSpace": "FreeSpace"
         },
         "hint": {
             "name": "Your Name",
@@ -66,7 +69,8 @@
         "nav": {
             "home": "Home",
             "backupservers": "Backup Servers",
-            "jobs": "Jobs"
+            "jobs": "Jobs",
+            "repositories": "Repositories"
         },
         "slider": {
 

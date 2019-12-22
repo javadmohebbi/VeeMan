@@ -12,6 +12,7 @@ import EditDashboard from '../components/Dashboards/edit'
 import DeleteDashboard from '../components/Dashboards/delete'
 import EditWidget from '../components/Dashboards/Widget/editWidgets'
 import JobsList from '../components/Jobs/job'
+import ReposList from '../components/Repositories/repos'
 import JobBackupSession from '../components/Jobs/jobBackupSession'
 /**
  * Management
@@ -50,6 +51,7 @@ const MainRouter = () => {
                                 {/* Management */}
                                 <Route exact path="/mgmt/backupservers" component={BackupServerList} />
                                 <Route exact path="/mgmt/backupservers/:id/jobs" component={JobsList} />
+                                <Route exact path="/mgmt/backupservers/:id/repositories" component={ReposList} />
 
                                 <Route exact path="/mgmt/jobs/:id/info" component={JobBackupSession} />
 
