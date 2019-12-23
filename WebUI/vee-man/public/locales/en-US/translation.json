@@ -27,7 +27,8 @@
             "addFromDefaultWidgets": "Add a Pre-defined Widget",
             "info": "Info",
             "addQuery": "Add Query",
-            "addFilter": "Add Filter"
+            "addFilter": "Add Filter",
+            "run": "Run"
         },
         "inp": {
             "email": "Email Address",
@@ -59,7 +60,8 @@
             "progress": "Progress",
             "kind": "Kind",
             "capacity": "Capacity",
-            "freeSpace": "FreeSpace"
+            "freeSpace": "FreeSpace",
+            "queryType": "Query Type"
         },
         "hint": {
             "name": "Your Name",

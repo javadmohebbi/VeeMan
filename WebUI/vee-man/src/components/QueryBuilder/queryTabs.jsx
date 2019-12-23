@@ -16,7 +16,7 @@ export const QueryTabs = (props) => {
 
   const [ queryCountId, setQueryCountId ] = React.useState(props.queryCountId || 0)
 
-  const [activeTabItem, setActiveTabItem] = React.useState(props.activeTabItem || 1)  
+  const [activeTabItem, setActiveTabItem] = React.useState(props.activeTabItem || 1)
 
   const handleItemChanged = (itemIndex) => {
     setActiveTabItem(itemIndex)
@@ -85,7 +85,7 @@ export const QueryTabs = (props) => {
           /* ADD NEW EMPTY QUERY */
           queryType !== t('general.msg.nothingSelected') ?
           <li className="nav-item btnadd">
-            <a className='ml-2 mt-2 btn btn-sm btn-warning' href={'#add-query'}
+            <a className='ml-2 mt-2 btn btn-sm btn-warning mb-2' href={'#add-query'}
               onClick = {handleAddNewEmptyQuery}
               role="tab" aria-controls={'add-query'} aria-selected="true">
               <i className="fas fa-plus"></i>

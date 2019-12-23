@@ -1,6 +1,7 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 import { GetQueryTypes } from '../../configs/queryBuilder/queryTypes'
+import { GetQueryString } from '../../configs/queryBuilder/jsonToQuery'
 
 import QueryTabs from './queryTabs'
 
@@ -24,6 +25,13 @@ const QueryBuilder = (props) => {
     //    { field: null, value: null, logicalOperator: undefined, comparisonOperator: null }
     // ]
   ])
+
+  React.useEffect(() => {
+    if (queries.length > 0) {
+      GetQueryString(queries)
+    }
+  }, [queries])
+
 
   React.useEffect(() => {
     // console.log(selectedType);
@@ -89,22 +97,28 @@ const QueryBuilder = (props) => {
               <div className="pg-qry-builder">
 
                 {/* Option Query Type */}
-                <div className="col-12 col-12 pl-0 pr-0">
-                  <div className="col-sm-12 col-md-3 pr-0 pl-0">
-                    <label htmlFor="querytype" className="col-12 col-form-label">Query Type</label>
-                    <div className="col-12">
-                      <select id="querytype" className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
-                        <option key={'nothingselected'} value={t('general.msg.nothingSelected')}>{t('general.msg.nothingSelected')}</option>
-                        {
-                          GetQueryTypes().map((item, index) => {
-                            return (
-                              <option key={index} value={item.cameleCase}>{item.queryType}</option>
-                            )
-                          })
-                        }
-                      </select>
-                    </div>
-                  </div>
+                <div className="col-sm-12 col-md-6 pg-qry-run">
+                  <label htmlFor="querytype" className="col-form-label">{t('general.inp.queryType')}</label>
+                  <select id="querytype" className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
+                      <option key={'nothingselected'} value={t('general.msg.nothingSelected')}>{t('general.msg.nothingSelected')}</option>
+                      {
+                        GetQueryTypes().map((item, index) => {
+                          return (
+                            <option key={index} value={item.cameleCase}>{item.queryType}</option>
+                          )
+                        })
+                      }
+                    </select>
+
+                  {
+                    queries.length > 0 ?
+                    <button className="btn btn-warning ml-2">
+                      <i className="fas fa-play"></i>
+                      {t('general.btn.run')}
+                    </button>
+                    :
+                    null
+                  }
                 </div>
 
                 {/*  QUERY Tabs  */}

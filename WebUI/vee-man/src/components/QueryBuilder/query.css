@@ -22,3 +22,15 @@
 .pg-rest {
   flex: 1 1 auto;
 }
+
+
+.pg-qry-run {
+  display: flex; flex-flow: row;
+}
+
+.pg-qry-run label, .pg-qry-run select, .pg-qry-run button {
+  flex: 1 0 auto
+}
+.pg-qry-run select {
+  max-width: 300px;
+}
