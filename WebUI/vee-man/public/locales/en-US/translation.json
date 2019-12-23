@@ -25,7 +25,9 @@
             "postColor": "Post-Text Color",
             "fontSize": "Font Size",
             "addFromDefaultWidgets": "Add a Pre-defined Widget",
-            "info": "Info"
+            "info": "Info",
+            "addQuery": "Add Query",
+            "addFilter": "Add Filter"
         },
         "inp": {
             "email": "Email Address",
@@ -89,6 +91,7 @@
         },
         "err": {
             "list": "Can not get requested list",
+            "query": "Can not run the requested query",
             "auth": {
                 "invalid": "Provided Username or Password is not valid!"
             },

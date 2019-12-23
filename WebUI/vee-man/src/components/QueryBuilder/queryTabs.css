@@ -1,0 +1,32 @@
+#queriesTab {
+  /* border-bottom-color: #131313!important; */
+}
+#queriesTabContent {
+  border-bottom-color: white !important;
+  border-right-color: white !important;
+  border-left-color: white !important;
+  border: 1px solid !important;
+  border-top: 0 !important;
+}
+span.nav-link a {
+  text-decoration: none
+}
+span.nav-link.active {
+  background-color: #131313 !important;
+  border-color: #131313 !important;
+  border-top-color: white !important;
+  border-right-color: white !important;
+  border-left-color: white !important;
+}
+span.nav-link.active a {
+  color: white
+}
+.btnadd {
+  border: 0
+}
+
+
+.bg-tab {
+  background: #131313;  /* fallback for old browsers */
+  color: #f3f3f3;
+}

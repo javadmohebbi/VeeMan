@@ -45,8 +45,9 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var jsonResponse map[string]interface{}
-	err = json.Unmarshal(refs.Bytes(), &jsonResponse)
+	// var qr map[string]interface{}
+	var qr vbemAPI.QueryResponse
+	err = json.Unmarshal(refs.Bytes(), &qr)
 
 	if err != nil {
 		log.Println(err)
@@ -60,7 +61,7 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 
 	rr = models.ResponseResult{
 		Error:  false,
-		Result: jsonResponse,
+		Result: qr,
 	}
 	_ = json.NewEncoder(w).Encode(rr)
 	return

@@ -8,31 +8,32 @@ type QueryWrapper struct {
 
 // Query - struct
 type Query struct {
-	Params        []QueryParams `json:"params"`
-	Sort          QuerySort     `json:"sort"`
-	Page          QueryPage     `json:"page"`
-	Filter        QueryFilter   `json:"filter"`
+	// Params        []QueryParams `json:"params"`
+	// Sort          QuerySort   `json:"sort"`
+	// Page          QueryPage   `json:"page"`
+	QueryID       string        `json:"queryId"`
+	Filters       []QueryFilter `json:"filters"`
 	GroupOperator string        `json:"groupOperator"`
 }
 
 // QueryParams - struct
-type QueryParams struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
-}
+// type QueryParams struct {
+// 	Key   string `json:"key"`
+// 	Value string `json:"value"`
+// }
 
 // QuerySort - struct
-type QuerySort struct {
-	IsSort    bool   `json:"isSort"`
-	SortType  string `json:"sortType"`
-	SortField string `json:"sortField"`
-}
+// type QuerySort struct {
+// 	IsSort    bool   `json:"isSort"`
+// 	SortType  string `json:"sortType"`
+// 	SortField string `json:"sortField"`
+// }
 
 // QueryPage - struct
-type QueryPage struct {
-	Page     int `json:"page"`
-	PageSize int `json:"pageSize"`
-}
+// type QueryPage struct {
+// 	Page     int `json:"page"`
+// 	PageSize int `json:"pageSize"`
+// }
 
 // QueryFilter - struct
 type QueryFilter struct {
