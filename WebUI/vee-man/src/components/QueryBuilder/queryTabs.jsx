@@ -16,7 +16,7 @@ export const QueryTabs = (props) => {
 
   const [ queryCountId, setQueryCountId ] = React.useState(props.queryCountId || 0)
 
-  const [activeTabItem, setActiveTabItem] = React.useState(props.activeTabItem || 1)
+  const [activeTabItem, setActiveTabItem] = React.useState(props.activeTabItem || 1)  
 
   const handleItemChanged = (itemIndex) => {
     setActiveTabItem(itemIndex)

@@ -23,7 +23,6 @@ const QueryFilters = (props) => {
       flts.push(filter)
       handleUpdateFilter(filter, filters.length-1)
     } else {
-      console.log(flts);
       flts.splice(indexPosition, 0, filter)
       handleUpdateFilter(filter, indexPosition)
     }
@@ -43,27 +42,23 @@ const QueryFilters = (props) => {
     UpdateFilters(flts, queryId)
   }
 
+  // Update Filter Position  < == >
+  const handleChangeFilterPosition = (fromIndex, toIndex, queryId) => {
+    let flts = filters;
+
+    [flts[fromIndex], flts[toIndex]] = [flts[toIndex], flts[fromIndex]]
+    UpdateFilters(flts, queryId)
+
+  }
+
   // remove fitler
   const handleRemoveFilter = (removeIndex, queryId) => {
     const flts = filters
     UpdateFilters(flts.splice(removeIndex, 1), queryId)
   }
 
-
   return (
     <>
-      {/*
-        filters.length === 0 ?
-        <div>
-          <button onClick={e => {e.preventDefault(); handleAddNewFilter(handleCreateNewEmptyFilter(), filters.length)}}
-            className="btn btn-sm btn-warning">
-            <i className="fas fa-plus"></i>
-            {t('general.btn.addFilter')}
-          </button>
-        </div>
-        :
-        null
-      */}
       <div className="col-sm-12 col-md-4 text-center mx-auto m-2">
         <button onClick={e => {e.preventDefault(); handleAddNewFilter(handleCreateNewEmptyFilter(), filters.length)}}
           className="btn btn-sm btn-warning">
@@ -78,6 +73,7 @@ const QueryFilters = (props) => {
             UpdateFilter={handleUpdateFilter}
             RemoveFilter={handleRemoveFilter}
             AddNewFilter={handleAddNewFilter}
+            ChangePosition={handleChangeFilterPosition}
             queryId={queryId}/>
         ))
       }
