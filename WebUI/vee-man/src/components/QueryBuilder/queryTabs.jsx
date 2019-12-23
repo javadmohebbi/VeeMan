@@ -58,7 +58,7 @@ export const QueryTabs = (props) => {
 
   // Update Query
   const handleUpdateQuery = (filters, queryId) => {
-    console.log('update query - tabs',filters);
+    // console.log('update query - tabs',filters);
     UpdateQuery(filters, queryId)
   }
 

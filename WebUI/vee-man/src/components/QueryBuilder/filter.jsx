@@ -19,19 +19,17 @@ const logicals = [
 const Filter = (props) => {
 
   const { filtersLength=0 } = props
-  const { UpdateFilter } = props
+  const { UpdateFilter, RemoveFilter } = props
 
-  // eslint-disable-next-line
-  const { filter=null, index } = props
+  const { filter=null, index, queryId } = props
 
-  // eslint-disable-next-line
   const [logicalOperator, setLogicalOperator] = React.useState(logicals[0])
-  // eslint-disable-next-line
+
   const [comparisonOperator, setComparisonOperator] =  React.useState(comparisons[0])
 
 
-  const handleUpdateFilter = (index, filter) => {    
-    UpdateFilter(filter)
+  const handleUpdateFilter = (filter, index) => {    
+    UpdateFilter(filter, index)
   }
 
 
@@ -44,11 +42,31 @@ const Filter = (props) => {
     e.preventDefault()
     setComparisonOperator(e.target.value)
   }
+  const hanelRemoveFilter = (removeIndex) => {
+    RemoveFilter(removeIndex, queryId)
+  }
+
+  const handleFieldChange = (field, idx) => {
+    var flt = filter
+    flt.field = field
+    handleUpdateFilter(flt, idx)
+  }
+
+  const handleValueChange = (value, idx) => {
+    console.log(value);
+  }
 
   return (
-    <div className="filter-container">
+    <div className="filter-container m-3">
       <div className="form-row mx-auto text-center pr-2 pt-2 pl-2 pb-2">
 
+
+          {/*Remove item*/}
+          <div className="col-sm-12 col-md-1" onClick={e=>{e.preventDefault(); hanelRemoveFilter(index)}}>
+              <button className="btn btn-danger">
+                <i className="fas fa-times mr-0"></i>
+              </button>
+          </div>
 
           {/* btn move up */}
           <div className="col-sm-12 col-md-1">
@@ -60,13 +78,6 @@ const Filter = (props) => {
             :
             null
           }
-          </div>
-
-          {/*Remove item*/}
-          <div className="col-sm-12 col-md-1">
-              <button className="btn btn-danger">
-                <i className="fas fa-times mr-0"></i>
-              </button>
           </div>
 
           {/* Logical Operator */}
@@ -90,7 +101,9 @@ const Filter = (props) => {
 
           {/* Field */}
           <div className="col-sm-12 col-md-3">
-            <input type="text" className="form-control" placeholder="Field" />
+            <input type="text" value={filter.field}
+              onChange={e => {e.preventDefault(); handleFieldChange(e.target.value, index)}}
+              className="form-control" placeholder="Field" />
           </div>
 
           {/* Comparison Operator */}
@@ -106,7 +119,9 @@ const Filter = (props) => {
 
           {/* Value */}
           <div className="col-sm-12 col-md-4">
-            <input type="text" className="form-control" placeholder="Value" />
+            <input type="text"
+              onChange={e => {e.preventDefault(); handleValueChange(e.target.value, index)}}
+              className="form-control" placeholder="Value" />
           </div>
 
           {/* btn move down */}

@@ -1,3 +1,5 @@
 .filter-container {
-  overflow-x: hidden;
+  overflow: hidden;
+  border: 1px solid #4a4646;
+  border-radius: 8px;
 }

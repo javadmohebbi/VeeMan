@@ -19,10 +19,11 @@ const QueryFilters = (props) => {
   // Add new filter at specific position
   const handleAddNewFilter = (filter, indexPosition) => {
     var flts = filters
-    if (flts.length === 0 || indexPosition < 0 || indexPosition > flts.length-1 ) {
+    if (flts.length === 0 || indexPosition < 0 || indexPosition > flts.length ) {
       flts.push(filter)
-      handleUpdateFilter(filter, 0)
+      handleUpdateFilter(filter, filters.length-1)
     } else {
+      console.log(flts);
       flts.splice(indexPosition, 0, filter)
       handleUpdateFilter(filter, indexPosition)
     }
@@ -36,11 +37,16 @@ const QueryFilters = (props) => {
   }
 
   // update filter
-  const handleUpdateFilter = (filter, index=0) => {
-    // console.log('update filter, q filters', filter, index);
+  const handleUpdateFilter = (filter, index) => {
     var flts = filters
     flts[index] = filter
     UpdateFilters(flts, queryId)
+  }
+
+  // remove fitler
+  const handleRemoveFilter = (removeIndex, queryId) => {
+    const flts = filters
+    UpdateFilters(flts.splice(removeIndex, 1), queryId)
   }
 
 
@@ -70,6 +76,7 @@ const QueryFilters = (props) => {
           <Filter key={index} index={index} filter={filter}
             filtersLength={props.filters.length || 0}
             UpdateFilter={handleUpdateFilter}
+            RemoveFilter={handleRemoveFilter}
             AddNewFilter={handleAddNewFilter}
             queryId={queryId}/>
         ))

@@ -50,7 +50,7 @@ const QueryBuilder = (props) => {
 
   // Update Queries
   const handleUpdateQueries = (queryId, filters) => {
-    console.log('update queries, q builder', filters, queryId);
+    // console.log('update queries, q builder', filters, queryId);
     var newQueries = queries.map((q) => {
       if (q.queryId === queryId) {
         return {...q, filters: filters }
