@@ -4,11 +4,10 @@ import { withTranslation } from 'react-i18next'
 import Filter from './filter'
 
 
-
 const QueryFilters = (props) => {
 
   const {t} = props
-  const { UpdateFilters } = props
+  const { UpdateFilters, queryBuilderBusy } = props
   const { queryId } = props
   // filters = [
   //    { field: null, value: null, logicalOperator: undefined, comparisonOperator: null }
@@ -61,7 +60,7 @@ const QueryFilters = (props) => {
     <>
       <div className="col-sm-12 col-md-4 text-center mx-auto m-2">
         <button onClick={e => {e.preventDefault(); handleAddNewFilter(handleCreateNewEmptyFilter(), filters.length)}}
-          className="btn btn-sm btn-warning">
+          className={`btn btn-sm btn-warning ${queryBuilderBusy ? 'disabled' : null}`}>
           <i className="fas fa-plus"></i>
           {t('general.btn.addFilter')}
         </button>
@@ -69,6 +68,7 @@ const QueryFilters = (props) => {
       {
         filters.map((filter, index) => (
           <Filter key={index} index={index} filter={filter}
+            queryBuilderBusy={queryBuilderBusy}
             filtersLength={props.filters.length || 0}
             UpdateFilter={handleUpdateFilter}
             RemoveFilter={handleRemoveFilter}

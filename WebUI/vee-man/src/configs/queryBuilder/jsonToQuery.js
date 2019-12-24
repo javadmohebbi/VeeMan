@@ -1,4 +1,5 @@
 export const GetQueryString = (queries, grouping, queryType) => {
+  if (queryType==='') { return '' }  
   var str = 'type=' + queryType
   var filters = []
   for (var i=0; i<queries.length; i++) {

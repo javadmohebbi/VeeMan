@@ -1,7 +1,10 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 import { GetQueryString } from '../../configs/queryBuilder/jsonToQuery'
+import LightSpinner from '../Loading/Spinner/Light';
+import {RunRawQuery} from '../../services/rawQuery'
 
+import QueryResult from './queryResult'
 import './queryGrouping.css'
 
 const logicals = [
@@ -12,11 +15,22 @@ const logicals = [
 const QueryGrouping = (props) => {
 
   const { t } = props
-  const { queries, queryType } = props
+  const { queries, queryType, ToastMessage, UpdateBusy } = props
+
+  const [busy, setBusy] = React.useState(false)
+  const [queryResult, setQueryResult] = React.useState(null)
 
   const [logicalOperator, setLogicalOperator] = React.useState([])
 
   const [queryString, setQueryString] = React.useState('')
+
+  React.useEffect(()=>{
+    UpdateBusy(busy)
+  },[busy, UpdateBusy])
+
+  React.useEffect(()=> {
+    setQueryResult(null)
+  }, [queryType])
 
   React.useEffect(() => {
     if (queries.length > 0) {
@@ -58,7 +72,8 @@ const QueryGrouping = (props) => {
     }
   }
 
-  // get logical operator
+
+
   const getLogicalOperator = (queryId) => {
     var lg=';'
     for (var i=0; i < logicalOperator.length; i++) {
@@ -71,12 +86,42 @@ const QueryGrouping = (props) => {
     return lg;
   }
 
+  // get query results from server
+  const handleSendServerRequest = (q) => {
+    setBusy(true)
+    setQueryResult(null)
+    RunRawQuery(q, queryType).then(data => {
+      setBusy(false)
+      if (data !== null) {
+        if (data.hasOwnProperty('error') && data.error === true) {
+          ToastMessage('error', data.message)
+        } else {
+          //
+          // Valid Response from server
+          //
+          ToastMessage('success', t('general.err.rawQuery.success'))
+          setQueryResult(data)
+          return
+        }
+      } else {
+        ToastMessage('error', t('general.err.rawQuery.null'))
+      }
+
+      setQueryResult(null)
+      return
+
+    })
+  }
 
   return (
     <>
     {
       queries.length <= 1 ? null :
-      <div className="card text-white bg-dark mb-3">
+      <>
+      {
+        (queryType === t('general.msg.nothingSelected') || queryType === '') ? null
+        :
+        <div className="card text-white bg-dark mb-3">
         <div className="card-body pt-4">
           <div className="text grouping pt-4">
             {
@@ -87,7 +132,7 @@ const QueryGrouping = (props) => {
                     /* Check for first query and ommit Logical operator */
                     index > 0 ?
                     <div className="input-group-prepend">
-                      <select className="form-control text-center" value={getLogicalOperator(qry.queryId)}
+                      <select disabled={busy} className="form-control text-center" value={getLogicalOperator(qry.queryId)}
                         onChange={e=> {e.preventDefault(); handleLogicalOperatorChange(qry.queryId, e.target.value)}}>
                         {
                           logicals.map((logical, index) => (
@@ -107,20 +152,41 @@ const QueryGrouping = (props) => {
           </div>
         </div>
       </div>
+      }
+      </>
     }
     {
-      queryString === '' || queryString === null ? null :
+      (queryString === '' || queryString === null) && (queryType !== t('general.msg.nothingSelected') || queryType !== '')  ? null :
       <div className="card text-white bg-dark mb-3">
         <div className="card-body">
           <h5 className="card-title">{t('general.veeam.queryString')}</h5>
-          <p className="card-text">{queryString}</p>
-          <button className="btn btn-warning">
-            <i className="fas fa-play"></i>
-            {t('general.btn.run')}
-          </button>
+          <div className="card-text">
+            <p>{queryString}</p>
+            <button className="btn btn-warning"
+              disabled={busy}
+              onClick={e => {e.preventDefault(); handleSendServerRequest(queryString)}}
+              >
+              <i className="fas fa-play"></i>
+              {t('general.btn.run')}
+            </button>
+            {
+              !busy ? null :
+              <span className="mx-2">
+                <LightSpinner spinnerSize="sm"/>
+              </span>
+            }
+          </div>
         </div>
       </div>
     }
+
+    {/* show queryResult */}
+    {
+      queryResult === null ? null :
+      <QueryResult queryResult={queryResult} queryType={queryType} busy={busy}/>
+    }
+
+
     </>
   )
 }

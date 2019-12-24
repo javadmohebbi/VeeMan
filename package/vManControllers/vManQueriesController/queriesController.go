@@ -21,11 +21,11 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 
 	var rr models.ResponseResult
 
-	var qwr vbemAPI.QueryWrapper
+	var qs vbemAPI.QueryString
 	var res models.ResponseResult
 
 	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &qwr)
+	err := json.Unmarshal(body, &qs)
 
 	if err != nil {
 		res.Error = err.Error()
@@ -33,7 +33,7 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	refs, err := vbemCalls.RawQuery(ls.SessionId, qwr)
+	refs, err := vbemCalls.RawQuery(ls.SessionId, qs.QueryString)
 
 	if err != nil {
 		log.Println(err)
@@ -45,9 +45,13 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var qr map[string]interface{}
-	var qr vbemAPI.QueryResponse
+	var qr map[string]interface{}
+	// var qr vbemAPI.QueryResponse
 	err = json.Unmarshal(refs.Bytes(), &qr)
+
+	// var rfs map[string]interface{}
+	// msr, _ := json.Marshal(qr["QueryResult"])
+	// err = json.Unmarshal(msr, &rfs)
 
 	if err != nil {
 		log.Println(err)
@@ -60,7 +64,8 @@ func RunRawQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rr = models.ResponseResult{
-		Error:  false,
+		Error: false,
+		// Result: rfs["Refs"],
 		Result: qr,
 	}
 	_ = json.NewEncoder(w).Encode(rr)

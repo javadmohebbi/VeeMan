@@ -93,7 +93,7 @@
         },
         "err": {
             "list": "Can not get requested list",
-            "query": "Can not run the requested query",
+            "query": "Can not run the requested query. Mabye your provided filters are not valid for Veeam Enterprise Manager",
             "auth": {
                 "invalid": "Provided Username or Password is not valid!"
             },
@@ -116,12 +116,17 @@
             },
             "rows": {
               "all": "Can not get rows lists"
+            },
+            "rawQuery": {
+              "null": "Your query has no result!",
+              "success": "Your query ran successfully!"
             }
         },
         "veeam": {
           "backupserver": "Backup Server",
           "backupservers": "Backup Servers",
           "queryString": "Query String",
+          "queryResult": "Query Result",
           "job": "Job",
           "jobs": "Jobs",
           "repository": "Repository",

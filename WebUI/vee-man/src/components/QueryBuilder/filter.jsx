@@ -19,7 +19,7 @@ const logicals = [
 const Filter = (props) => {
 
   const { filtersLength=0 } = props
-  const { UpdateFilter, RemoveFilter, ChangePosition } = props
+  const { UpdateFilter, RemoveFilter, ChangePosition, queryBuilderBusy } = props
 
   const { filter=null, index, queryId } = props
 
@@ -97,7 +97,7 @@ const Filter = (props) => {
 
           {/*Remove item*/}
           <div className="col-sm-12 col-md-1" onClick={e=>{e.preventDefault(); hanelRemoveFilter(index)}}>
-              <button className="btn btn-danger">
+              <button className="btn btn-danger" disabled={queryBuilderBusy}>
                 <i className="fas fa-times mr-0"></i>
               </button>
           </div>
@@ -106,7 +106,7 @@ const Filter = (props) => {
           <div className="col-sm-12 col-md-1" onClick={e => {e.preventDefault();handleMoveUp(index)}}>
           {
             filtersLength > 0 && index !== 0 ?
-              <button className="btn btn-info">
+              <button className="btn btn-info" disabled={queryBuilderBusy}>
                 <i className="fas fa-caret-up mr-0"></i>
               </button>
             :
@@ -119,7 +119,7 @@ const Filter = (props) => {
           {
             index !== 0
             ?
-              <select className="form-control text-center" value={logicalOperator} onChange={handleLogicalOperatorChange}>
+              <select className="form-control text-center" disabled={queryBuilderBusy} value={logicalOperator} onChange={handleLogicalOperatorChange}>
                 {
                   logicals.map((logical, index) => (
                     <option key={`lgc-${index}`} value={logical.value}>{logical.name}</option>
@@ -133,14 +133,15 @@ const Filter = (props) => {
 
           {/* Field */}
           <div className="col-sm-12 col-md-3">
-            <input type="text" value={filter.field}              
+            <input type="text" value={filter.field}
+              disabled={queryBuilderBusy}
               onChange={e => {e.preventDefault(); handleFieldChange(e.target.value, index)}}
               className="form-control" placeholder="Field" />
           </div>
 
           {/* Comparison Operator */}
           <div className="col-sm-12 col-md-1">
-            <select className="form-control text-center" value={comparisonOperator} onChange={handleComparisonOperatorChange}>
+            <select disabled={queryBuilderBusy} className="form-control text-center" value={comparisonOperator} onChange={handleComparisonOperatorChange}>
               {
                 comparisons.map((c, index) => (
                   <option key={`lgc-${index}`} value={c.value}>{c.name}</option>
@@ -152,6 +153,7 @@ const Filter = (props) => {
           {/* Value */}
           <div className="col-sm-12 col-md-4">
             <input type="text"
+              disabled={queryBuilderBusy}
               onChange={e => {e.preventDefault(); handleValueChange(e.target.value, index)}}
               value={filter.value}
               className="form-control" placeholder="Value" />
@@ -161,7 +163,7 @@ const Filter = (props) => {
           <div className="col-sm-12 col-md-1" onClick={e => {e.preventDefault();handleMoveDown(index)}}>
           {
             filtersLength > 0 && index !== filtersLength -1 ?
-              <button className="btn btn-info">
+              <button className="btn btn-info" disabled={queryBuilderBusy}>
                 <i className="fas fa-caret-down mr-0"></i>
               </button>
             :

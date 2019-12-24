@@ -113,7 +113,12 @@ func ReadSession() vbemAPI.LogonSession {
 
 	f, err := os.OpenFile(conf.VbEntMgr.SessionPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		log.Fatal("Cant read session", err)
+		log.Println("Cant read session ", err)
+		return vbemAPI.LogonSession{
+			SessionId: "",
+			Username:  "",
+			ValidTo:   -1,
+		}
 	}
 
 	// defer f.Close()

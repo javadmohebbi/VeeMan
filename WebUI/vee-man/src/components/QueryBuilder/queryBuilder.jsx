@@ -6,7 +6,7 @@ import QueryGrouping from './queryGrouping'
 import QueryTabs from './queryTabs'
 
 import Toastification from '../Toastification/toastification'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import './query.css'
 
@@ -18,6 +18,7 @@ const QueryBuilder = (props) => {
 
   const containerId = 'queryBuilder'
   const [selectedType, setSelectedType] = React.useState(t('general.msg.nothingSelected'))
+  const [busy, setBusy] = React.useState(false)
 
   const [queries, setQueries] = React.useState([
     // queryId: 'xxxx-yyyyyyyy-zzzz-dddd'
@@ -27,12 +28,17 @@ const QueryBuilder = (props) => {
   ])
 
 
+  const hadnleToastMessage = (kind='success', message) => {
+    switch (kind) {
+      case 'error':
+        toast.error(message, {containerId: containerId})
+        return
+      default:
+        toast.success(message, {containerId: containerId})
+        return
+    }
+  }
 
-
-
-  // React.useEffect(() => {
-  //   // console.log(selectedType);
-  // }, [selectedType])
 
   const handleSelectTypeChange = (e) => {
     e.preventDefault()
@@ -65,6 +71,10 @@ const QueryBuilder = (props) => {
     setQueries(newQueries)
   }
 
+
+  const handleSetBusy = (busy) => {
+    setBusy(busy)
+  }
   // handleUpdateGrouping
   // const handleUpdateGrouping = (grouping) => {
   //   setGrouping(grouping)
@@ -100,7 +110,7 @@ const QueryBuilder = (props) => {
                 {/* Option Query Type */}
                 <div className="col-sm-12 col-md-6 pg-qry-run">
                   <label htmlFor="querytype" className="col-form-label">{t('general.inp.queryType')}</label>
-                  <select id="querytype" className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
+                  <select id="querytype" disabled={busy} className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
                       <option key={'nothingselected'} value={t('general.msg.nothingSelected')}>{t('general.msg.nothingSelected')}</option>
                       {
                         GetQueryTypes().map((item, index) => {
@@ -125,6 +135,7 @@ const QueryBuilder = (props) => {
                 {/*  QUERY Tabs  */}
                 <div className="col-12 mt-4 mb-4">
                   <QueryTabs queries={queries} queryCountId={queryCountId} queryType={selectedType}
+                    queryBuilderBusy={busy}
                     AddQuery={handleAddQuery}
                     RemoveQuery={handleRemoveQuery}
                     UpdateQuery={handleUpdateQueries}
@@ -136,7 +147,10 @@ const QueryBuilder = (props) => {
 
           {/* REST BODY */}
           <div className="pg-rest mt-2 mb-2">
-            <QueryGrouping queries={queries} queryType={selectedType} />
+            <QueryGrouping queries={queries}
+              ToastMessage={hadnleToastMessage}
+              UpdateBusy={handleSetBusy}
+              queryType={selectedType === t('general.msg.nothingSelected') ? '' : selectedType} />
           </div>
         </div>
       </div>

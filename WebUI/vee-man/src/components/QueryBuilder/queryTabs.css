@@ -8,6 +8,9 @@
   border: 1px solid !important;
   border-top: 0 !important;
 }
+span.nav-link {
+  height: 50px !important;
+}
 span.nav-link a {
   text-decoration: none
 }
