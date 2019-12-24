@@ -10,12 +10,15 @@ const QueryResult = (props) => {
   const [pluralTitle, setPluralTitle] = React.useState(null)
   const [result, setResult] = React.useState(null)
 
+  const [preparedResults, setPreparedResults] = React.useState(null)
+
 
   React.useEffect(() => {
     const upperFirstQueryType = queryType.charAt(0).toUpperCase() + queryType.substring(1);
     setTitle(upperFirstQueryType)
     setPluralTitle(null)
     setResult(null)
+    // setPreparedResults(null)
   }, [queryType])
 
   React.useEffect(()=> {
@@ -31,7 +34,7 @@ const QueryResult = (props) => {
   React.useEffect(() => {
     if (typeof result === 'object' && result !== null) {
       // console.log(typeof result, '(', result,')');
-      PrepareResult(result, title, pluralTitle)
+      setPreparedResults(PrepareResult(result, title, pluralTitle))
     }
   }, [result, title, pluralTitle])
 
@@ -60,22 +63,80 @@ const QueryResult = (props) => {
   //   )
   // }
 
+  const Rows = ({d}) => {
+    // for (var k=0; k < d.length; k++) {
+    //   <span key={k} className="mr-5 d-inline-block" title={typeof d[k] === 'object' ? <>[object]</> : <>{d[k]}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+    //     { typeof data === 'object' ? <>[object]</> : <>{d[k]}</> }
+    //   </span>
+    // }
+    // const Col = ({row}) => {
+    //   return _.map(row, (d, index) => {
+    //     return (
+    //       <span key={index} className="mr-5 d-inline-block" title={typeof d === 'object' ? <>[object]</> : <>{d}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+    //         { typeof d === 'object' ? <>[object]</> : <>{d}</> }
+    //       </span>
+    //     )
+    //   })
+    // }
+
+    // console.log(d);
+    return d.map((data, index)=> {
+      return (
+          <span key={index} className="mr-5 d-inline-block"
+            title={ typeof data === 'string' ? data : '[object]' }
+            style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            { typeof data === 'string' ? data : '[object]' }
+          </span>
+
+      )
+    })
+  }
+
   return (
     <>
       {
         queryResult === null ? null :
         <div className="card text-white bg-dark mb-3">
           <div className="card-body">
-            <h5 className="card-title">{t('general.veeam.queryResult')}</h5>
+            <h5 className="card-title">{t('general.veeam.queryResult')} (<span className='text-warning'>{pluralTitle !== null ? pluralTitle : title }</span>)</h5>
             <div className="card-text">
-              <p>{pluralTitle !== null ? pluralTitle : title }</p>
               {
                 queryResult === null && result !== null ? null :
                 <>
                 {
                   (typeof result === 'object' && result !== null) ?
                     <div>
-                      result set
+                      {
+                        preparedResults !== null ?
+                          <>
+                          {
+                            preparedResults.titles.map((ttl, ind) => (
+                              <span key={ind} className="mr-5 d-inline-block" title={ttl} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis'  }}>
+                                {ttl}
+                              </span>
+                            ))
+                          }
+                          <hr/>
+                          {
+                            preparedResults.dataType.map((dtp, ind) => (
+                              <span key={ind} className="mr-5 d-inline-block" title={dtp} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {dtp}
+                              </span>
+                            ))
+                          }
+                          <hr/>
+                            {
+                              preparedResults.data.map((d, ind) => (
+                                <div key={ind}>
+                                  <Rows d={d}/>
+                                </div>
+                              ))
+                            }
+
+                          </>
+                        :
+                        null
+                      }
                     </div>
                   :
                   <div>

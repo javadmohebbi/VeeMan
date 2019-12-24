@@ -4,10 +4,12 @@ export const PrepareResult = (result, title, pluralTitle) => {
   var titles = []
   var data = []
   var refType = ''
+  var dataType = []
   var retObj = {
     titles: titles,
     data: data,
-    refType: refType
+    refType: refType,
+    dataType: dataType,
   }
 
   if (typeof result === 'undefined' || result === null || result === '') {
@@ -17,18 +19,31 @@ export const PrepareResult = (result, title, pluralTitle) => {
   var arr = []
 
   if(result[title].constructor === Object){
-    retObj.titles = Object.keys(result[title])
+    titles = Object.keys(result[title])
+    data.push(Object.values(result[title]))
   }
   else if(result[title].constructor === Array){
     arr = result[title].map(res => res)
     if (arr.length > 0 ) {
-      retObj.titles = retObj.titles = Object.keys(arr[0])
+      titles = Object.keys(arr[0])
+    }
+    for (var j=0; j<arr.length; j++) {
+      data.push(Object.values(arr[j]))
     }
   } else {
     return retObj
   }
 
-  console.log(retObj);  
+  for (j=0; j<data[0].length; j++) {
+    dataType.push(typeof data[0][j])
+  }
+
+  retObj.titles = titles
+  retObj.data = data
+  retObj.refType = data[0][titles.indexOf('Type')];
+  retObj.dataType = dataType
+
+  console.log(retObj);
 
   return retObj
 }
