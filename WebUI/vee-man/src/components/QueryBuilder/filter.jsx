@@ -133,7 +133,7 @@ const Filter = (props) => {
 
           {/* Field */}
           <div className="col-sm-12 col-md-3">
-            <input type="text" value={filter.field}
+            <input type="text" value={filter.field}              
               onChange={e => {e.preventDefault(); handleFieldChange(e.target.value, index)}}
               className="form-control" placeholder="Field" />
           </div>

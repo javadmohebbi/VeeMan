@@ -1,8 +1,8 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 import { GetQueryTypes } from '../../configs/queryBuilder/queryTypes'
-import { GetQueryString } from '../../configs/queryBuilder/jsonToQuery'
 
+import QueryGrouping from './queryGrouping'
 import QueryTabs from './queryTabs'
 
 import Toastification from '../Toastification/toastification'
@@ -26,16 +26,13 @@ const QueryBuilder = (props) => {
     // ]
   ])
 
-  React.useEffect(() => {
-    if (queries.length > 0) {
-      GetQueryString(queries)
-    }
-  }, [queries])
 
 
-  React.useEffect(() => {
-    // console.log(selectedType);
-  }, [selectedType])
+
+
+  // React.useEffect(() => {
+  //   // console.log(selectedType);
+  // }, [selectedType])
 
   const handleSelectTypeChange = (e) => {
     e.preventDefault()
@@ -58,7 +55,6 @@ const QueryBuilder = (props) => {
 
   // Update Queries
   const handleUpdateQueries = (queryId, filters) => {
-    // console.log('update queries, q builder', filters, queryId);
     var newQueries = queries.map((q) => {
       if (q.queryId === queryId) {
         return {...q, filters: filters }
@@ -68,6 +64,11 @@ const QueryBuilder = (props) => {
     })
     setQueries(newQueries)
   }
+
+  // handleUpdateGrouping
+  // const handleUpdateGrouping = (grouping) => {
+  //   setGrouping(grouping)
+  // }
 
   return (
     <>
@@ -110,7 +111,7 @@ const QueryBuilder = (props) => {
                       }
                     </select>
 
-                  {
+                  {/*
                     queries.length > 0 ?
                     <button className="btn btn-warning ml-2">
                       <i className="fas fa-play"></i>
@@ -118,7 +119,7 @@ const QueryBuilder = (props) => {
                     </button>
                     :
                     null
-                  }
+                  */}
                 </div>
 
                 {/*  QUERY Tabs  */}
@@ -135,7 +136,7 @@ const QueryBuilder = (props) => {
 
           {/* REST BODY */}
           <div className="pg-rest mt-2 mb-2">
-            Body
+            <QueryGrouping queries={queries} queryType={selectedType} />
           </div>
         </div>
       </div>

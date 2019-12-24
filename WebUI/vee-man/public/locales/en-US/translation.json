@@ -121,6 +121,7 @@
         "veeam": {
           "backupserver": "Backup Server",
           "backupservers": "Backup Servers",
+          "queryString": "Query String",
           "job": "Job",
           "jobs": "Jobs",
           "repository": "Repository",

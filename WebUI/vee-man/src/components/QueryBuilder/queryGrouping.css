@@ -1,0 +1,12 @@
+.grouping {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+.grouping input, .grouping select {
+  font-size: 11px !important;
+  text-align: center !important;
+}
+.grouping .grp-item {
+  flex: 1 0 auto;
+}
