@@ -2,6 +2,9 @@ import React from 'react'
 import { withTranslation } from 'react-i18next'
 import {PrepareResult, ConvertQueryResultToResult} from '../../services/rawQuery/preparation'
 
+import ResultTable from './resultTable'
+
+
 const QueryResult = (props) => {
   const { t } = props
   const { queryResult=null, queryType } = props
@@ -63,34 +66,34 @@ const QueryResult = (props) => {
   //   )
   // }
 
-  const Rows = ({d}) => {
-    // for (var k=0; k < d.length; k++) {
-    //   <span key={k} className="mr-5 d-inline-block" title={typeof d[k] === 'object' ? <>[object]</> : <>{d[k]}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-    //     { typeof data === 'object' ? <>[object]</> : <>{d[k]}</> }
-    //   </span>
-    // }
-    // const Col = ({row}) => {
-    //   return _.map(row, (d, index) => {
-    //     return (
-    //       <span key={index} className="mr-5 d-inline-block" title={typeof d === 'object' ? <>[object]</> : <>{d}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-    //         { typeof d === 'object' ? <>[object]</> : <>{d}</> }
-    //       </span>
-    //     )
-    //   })
-    // }
-
-    // console.log(d);
-    return d.map((data, index)=> {
-      return (
-          <span key={index} className="mr-5 d-inline-block"
-            title={ typeof data === 'string' ? data : '[object]' }
-            style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            { typeof data === 'string' ? data : '[object]' }
-          </span>
-
-      )
-    })
-  }
+  // const Rows = ({d}) => {
+  //   // for (var k=0; k < d.length; k++) {
+  //   //   <span key={k} className="mr-5 d-inline-block" title={typeof d[k] === 'object' ? <>[object]</> : <>{d[k]}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+  //   //     { typeof data === 'object' ? <>[object]</> : <>{d[k]}</> }
+  //   //   </span>
+  //   // }
+  //   // const Col = ({row}) => {
+  //   //   return _.map(row, (d, index) => {
+  //   //     return (
+  //   //       <span key={index} className="mr-5 d-inline-block" title={typeof d === 'object' ? <>[object]</> : <>{d}</>} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+  //   //         { typeof d === 'object' ? <>[object]</> : <>{d}</> }
+  //   //       </span>
+  //   //     )
+  //   //   })
+  //   // }
+  //
+  //   // console.log(d);
+  //   return d.map((data, index)=> {
+  //     return (
+  //         <span key={index} className="mr-5 d-inline-block"
+  //           title={ typeof data === 'string' ? data : '[object]' }
+  //           style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+  //           { typeof data === 'string' ? data : '[object]' }
+  //         </span>
+  //
+  //     )
+  //   })
+  // }
 
   return (
     <>
@@ -106,37 +109,9 @@ const QueryResult = (props) => {
                 {
                   (typeof result === 'object' && result !== null) ?
                     <div>
-                      {
-                        preparedResults !== null ?
-                          <>
-                          {
-                            preparedResults.titles.map((ttl, ind) => (
-                              <span key={ind} className="mr-5 d-inline-block" title={ttl} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis'  }}>
-                                {ttl}
-                              </span>
-                            ))
-                          }
-                          <hr/>
-                          {
-                            preparedResults.dataType.map((dtp, ind) => (
-                              <span key={ind} className="mr-5 d-inline-block" title={dtp} style={{width: '70px',maxWidth: '70px', whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {dtp}
-                              </span>
-                            ))
-                          }
-                          <hr/>
-                            {
-                              preparedResults.data.map((d, ind) => (
-                                <div key={ind}>
-                                  <Rows d={d}/>
-                                </div>
-                              ))
-                            }
-
-                          </>
-                        :
-                        null
-                      }
+                      <div className="mt-5 mb-5 p-2 pb-5">
+                        <ResultTable result={preparedResults} />
+                      </div>
                     </div>
                   :
                   <div>

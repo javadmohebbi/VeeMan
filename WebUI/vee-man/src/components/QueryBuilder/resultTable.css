@@ -1,0 +1,8 @@
+.rt-holder {
+  max-width: 100%;
+  /* overflow-x: scroll; */
+}
+
+.rt-holder table td, .rt-holder table th {
+  max-width: 50px;
+}
