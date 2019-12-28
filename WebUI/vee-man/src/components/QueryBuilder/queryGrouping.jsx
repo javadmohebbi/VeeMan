@@ -30,7 +30,7 @@ const QueryGrouping = (props) => {
 
   React.useEffect(()=> {
     setQueryResult(null)
-  }, [queryType])
+  }, [queries])
 
   React.useEffect(() => {
     if (queries.length > 0) {
@@ -109,8 +109,8 @@ const QueryGrouping = (props) => {
 
       setQueryResult(null)
       return
-
     })
+
   }
 
   return (

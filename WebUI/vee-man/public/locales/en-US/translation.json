@@ -63,7 +63,9 @@
             "freeSpace": "FreeSpace",
             "queryType": "Query Type",
             "dataType": "Type",
-            "convert": "Convert"
+            "convert": "Convert",
+            "show": "Show",
+            "hide": "Hide"
         },
         "hint": {
             "name": "Your Name",
