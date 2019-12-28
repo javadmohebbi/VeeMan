@@ -23,14 +23,14 @@ const FormatDateStr = (str) => {
 
 const ResultTable = (props) => {
   const {t} = props
-  const {result} = props
+  const {result, UpdateMetaData } = props
 
   const [headers, setHeaders] = React.useState([])
   const [dataTypes, setDataTypes] = React.useState([])
   const [data, setData] = React.useState([])
 
-  const [showCol, setShowCol] = React.useState([])
-  const [wantedType, setWantedType] = React.useState([])
+  const [showCol, setShowCol] = React.useState(props.showCol || [])
+  const [wantedType, setWantedType] = React.useState(props.wantedType || [])
   const [firstInit, setFirstInit] = React.useState(true)
   const [pagination,setPagination] = React.useState({
     page: 1,
@@ -39,6 +39,7 @@ const ResultTable = (props) => {
     total_pages: 1,
     data: []
   })
+
   const [filter, setFilter] = React.useState('')
 
   const ConvertedTypes = [
@@ -54,6 +55,8 @@ const ResultTable = (props) => {
     { name: 'uid', value: 'uid', func: ExtractUID },
   ]
 
+
+
   React.useEffect(() => {
     if (result !== null ) {
       if (result.hasOwnProperty('titles')) {
@@ -63,21 +66,26 @@ const ResultTable = (props) => {
         setDataTypes(result.dataType)
       }
 
-      if (result.hasOwnProperty('wantedType')) {
-        setWantedType(result.wantedType)
-      } else {
-        if (result.hasOwnProperty('dataType')) {
-          setWantedType(result.dataType)
+      if (props.wantedType.length === 0 ) {
+        if (result.hasOwnProperty('wantedType')) {
+          setWantedType(result.wantedType)
         } else {
-          setWantedType([])
+          if (result.hasOwnProperty('dataType')) {
+            setWantedType(result.dataType)
+
+          } else {
+            setWantedType([])
+          }
         }
+      } else {
+        setWantedType(props.wantedType)
       }
 
       if (result.hasOwnProperty('data')) {
         setData(result.data)
       }
     }
-  }, [result])
+  }, [result, UpdateMetaData, props.wantedType])
 
   React.useEffect(() => {
     if (data.length > 0 && firstInit) {
@@ -86,15 +94,24 @@ const ResultTable = (props) => {
     }
   }, [data,firstInit, pagination])
 
+
   React.useEffect(() => {
     if (headers.length > 0 && showCol.length === 0) {
-      var sh = []
-      for (var i=0; i<headers.length; i++) {
-        sh.push(true)
+      if (props.showCol.length > 0 ) {
+        setShowCol(props.showCol)
+      } else {
+        var sh = []
+        for (var i=0; i<headers.length; i++) {
+          sh.push(true)
+        }
+        setShowCol(sh)
+        UpdateMetaData(sh, wantedType)
       }
-      setShowCol(sh)
+
     }
-  }, [headers, showCol])
+  }, [headers, showCol, props.showCol, UpdateMetaData, wantedType])
+
+
 
   const convertTo = (dt, v) => {
     if (dt === 'object') { return '[object]' }
@@ -103,9 +120,7 @@ const ResultTable = (props) => {
     filtered = _.without(filtered, undefined)
 
     var converted = filtered.length > 0 ? filtered[0].func(v) : FormatString(v)
-
     return converted
-
   }
 
 
@@ -113,6 +128,7 @@ const ResultTable = (props) => {
   const handleChangeConvertedType = (newType, index) => {
     let wt = [...wantedType]
     wt[index] = newType
+    UpdateMetaData(showCol, wt)
     setWantedType(wt)
   }
 
@@ -120,6 +136,9 @@ const ResultTable = (props) => {
   const handleChangeShowCols = (newShow, index) => {
     let scs = [...showCol]
     scs[index] = (newShow === 'true')
+
+    UpdateMetaData(scs, wantedType)
+
     setShowCol(scs)
   }
 
@@ -162,19 +181,38 @@ const ResultTable = (props) => {
   }
 
   const TableRow = ({data, index}) => {
-    if (showCol[index]) {
-      return (
-        <td key={index} title={ convertTo( wantedType[index] , data) }
-          style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {/* typeof data === 'string' ? data : '[object]' */}
-          {
-            convertTo( wantedType[index] , data)
-          }
-        </td>
-      )
-    } else {
-      return null
-    }
+      // console.log(data,wantedType);
+      if (showCol[index]) {
+        try {
+          return (
+            <td title={ convertTo( typeof wantedType[index] === 'undefined' ? 'string' : wantedType[index] , data) }
+              style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {/* typeof data === 'string' ? data : '[object]' */}
+              {
+                convertTo( typeof wantedType[index] === 'undefined' ? 'string' : wantedType[index] , data)
+              }
+            </td>
+          )
+        } catch(e) {
+          console.log(e);
+          return null
+        }
+        // console.log(data);
+        // return (
+        //   <>
+        //   <td key={index} title={ 'data' }
+        //     style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        //     {
+        //       'data'
+        //     }
+        //   </td>
+        //   </>
+        // )
+      } else {
+        return null
+      }
+
+
   }
 
   const handleChangePagination = (page) => {

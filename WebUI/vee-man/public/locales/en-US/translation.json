@@ -98,6 +98,7 @@
         "err": {
             "list": "Can not get requested list",
             "query": "Can not run the requested query. Mabye your provided filters are not valid for Veeam Enterprise Manager",
+            "save": "Can not save information to server!",
             "auth": {
                 "invalid": "Provided Username or Password is not valid!"
             },

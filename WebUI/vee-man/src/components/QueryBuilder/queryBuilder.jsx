@@ -2,23 +2,36 @@ import React from 'react'
 import { withTranslation } from 'react-i18next'
 import { GetQueryTypes } from '../../configs/queryBuilder/queryTypes'
 
+import uuidv1 from 'uuid/v1'
+
 import QueryGrouping from './queryGrouping'
 import QueryTabs from './queryTabs'
+import { SaveQueryToServer } from '../../services/rawQuery/saveToServer'
 
 import Toastification from '../Toastification/toastification'
 import { toast } from 'react-toastify'
 
 import './query.css'
 
+
+
 const QueryBuilder = (props) => {
 
   const { t } = props
+
+  const uuidQuery = uuidv1()
 
   const queryCountId = 0
 
   const containerId = 'queryBuilder'
   const [selectedType, setSelectedType] = React.useState(t('general.msg.nothingSelected'))
   const [busy, setBusy] = React.useState(false)
+
+  const [wantedType, setWantedType] = React.useState([])
+  const [showCol, setShowCol] = React.useState([])
+  const [queryTitle, setQueryTitle] = React.useState(uuidQuery)
+
+  const [queryId, setQueryID] = React.useState(uuidQuery)
 
   const [queries, setQueries] = React.useState([
     // queryId: 'xxxx-yyyyyyyy-zzzz-dddd'
@@ -43,6 +56,13 @@ const QueryBuilder = (props) => {
   const handleSelectTypeChange = (e) => {
     e.preventDefault()
     setSelectedType(e.target.value)
+
+    setShowCol([])
+    setWantedType([])
+
+    var uid = uuidv1()
+    setQueryTitle(uid)
+    setQueryID(uid)
   }
 
 
@@ -75,10 +95,43 @@ const QueryBuilder = (props) => {
   const handleSetBusy = (busy) => {
     setBusy(busy)
   }
-  // handleUpdateGrouping
-  // const handleUpdateGrouping = (grouping) => {
-  //   setGrouping(grouping)
-  // }
+
+
+  // Update Meta Data
+  const handleUpdateResultMetaData = (newShowCol, newWantedType, newTitle='') => {
+    if (newShowCol !== showCol) {
+      setShowCol(newShowCol)
+    }
+    if (newWantedType !== wantedType) {
+      setWantedType(newWantedType)
+    }
+
+    if (newTitle !== '' && newTitle !== queryTitle) {
+      console.log(newTitle, queryTitle);
+      setQueryTitle(newTitle)
+    }
+  }
+
+  // Save
+  const handleSaveQueryToServer = () => {
+    var metadata = {
+      showCol: showCol,
+      wantedType: wantedType,
+      title: queryTitle,
+    }
+    setBusy(true)
+    SaveQueryToServer(queries, metadata, queryId || null).then(data => {
+      if (data.hasOwnProperty('error') && data.error === true) {
+        // Handle Errors
+        hadnleToastMessage('error', data.message)
+      } else {
+        hadnleToastMessage('success', t('general.msg.dataSaved'))
+      }
+      setBusy(false)
+    })
+  }
+
+
 
   return (
     <>
@@ -150,6 +203,11 @@ const QueryBuilder = (props) => {
             <QueryGrouping queries={queries}
               ToastMessage={hadnleToastMessage}
               UpdateBusy={handleSetBusy}
+              SaveQueryToServer={handleSaveQueryToServer}
+              wantedType={wantedType} showCol={showCol}
+              queryTitle={queryTitle}
+              queryId={queryId}
+              UpdateMetaData={handleUpdateResultMetaData}
               queryType={selectedType === t('general.msg.nothingSelected') ? '' : selectedType} />
           </div>
         </div>

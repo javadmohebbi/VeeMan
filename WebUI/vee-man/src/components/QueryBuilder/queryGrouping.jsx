@@ -15,7 +15,9 @@ const logicals = [
 const QueryGrouping = (props) => {
 
   const { t } = props
-  const { queries, queryType, ToastMessage, UpdateBusy } = props
+  const { queries, queryType, ToastMessage, UpdateBusy,
+    SaveQueryToServer, queryId,
+    wantedType=[], showCol=[], UpdateMetaData, queryTitle='' } = props
 
   const [busy, setBusy] = React.useState(false)
   const [queryResult, setQueryResult] = React.useState(null)
@@ -23,6 +25,15 @@ const QueryGrouping = (props) => {
   const [logicalOperator, setLogicalOperator] = React.useState([])
 
   const [queryString, setQueryString] = React.useState('')
+
+  const [editTitle, setEditTitle] = React.useState(false)
+  const [txtTitle, setTxtTitle] = React.useState(queryTitle || '')
+
+
+
+  React.useEffect(()=>{
+    setQueryResult(null)
+  },[queryType])
 
   React.useEffect(()=>{
     UpdateBusy(busy)
@@ -72,8 +83,6 @@ const QueryGrouping = (props) => {
     }
   }
 
-
-
   const getLogicalOperator = (queryId) => {
     var lg=';'
     for (var i=0; i < logicalOperator.length; i++) {
@@ -112,6 +121,19 @@ const QueryGrouping = (props) => {
     })
 
   }
+
+
+  // Save Query
+  const handleSaveQueries = (resultConfig) => {
+    // console.log(resultConfig);
+    SaveQueryToServer()
+  }
+
+  // Update Meta Data
+  const handleUpdateResultMetaData = (newShowCol, newWantedType) => {
+    UpdateMetaData(newShowCol, newWantedType, queryTitle === '' ? queryType + '_'+ queryId : queryTitle);
+  }
+
 
   return (
     <>
@@ -159,7 +181,26 @@ const QueryGrouping = (props) => {
       (queryString === '' || queryString === null) && (queryType !== t('general.msg.nothingSelected') || queryType !== '')  ? null :
       <div className="card text-white bg-dark mb-3">
         <div className="card-body">
-          <h5 className="card-title">{t('general.veeam.queryString')}</h5>
+          <h5 className="card-title">
+            {t('general.veeam.queryString')} -  {
+              !editTitle ?
+                <>
+                <span className="text-warning">{txtTitle}</span>
+                <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(true)}}
+                  className="btn btn-warning btn-sm ml-1">
+                  <i className="fas fa-pen mx-auto px-auto"></i>
+                </button>
+                </>
+              :
+                <>
+                  <input disabled={busy} type="text" className="form-control d-inline w-auto"
+                    value={txtTitle} onChange={e => setTxtTitle(e.target.value)} />
+                  <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); UpdateMetaData(showCol, wantedType, txtTitle)}} className="ml-2 btn btn-sm btn-success"><i className="fas fa-save mx-auto px-auto"></i></button>
+                  <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); setTxtTitle(queryTitle) ;UpdateMetaData(showCol, wantedType, queryTitle)}} className="ml-2 btn btn-sm btn-danger">x</button>
+                </>
+            }
+
+          </h5>
           <div className="card-text">
             <p>{queryString}</p>
             <button className="btn btn-warning"
@@ -169,6 +210,17 @@ const QueryGrouping = (props) => {
               <i className="fas fa-play"></i>
               {t('general.btn.run')}
             </button>
+            {
+              queryResult === null ? null :
+              <button className="btn btn-success ml-2"
+                disabled={busy}
+                onClick={e => {e.preventDefault(); handleSaveQueries()}}
+                >
+                <i className="fas fa-save"></i>
+                {t('general.btn.save')}
+              </button>
+            }
+
             {
               !busy ? null :
               <span className="mx-2">
@@ -183,7 +235,10 @@ const QueryGrouping = (props) => {
     {/* show queryResult */}
     {
       queryResult === null ? null :
-      <QueryResult queryResult={queryResult} queryType={queryType} busy={busy}/>
+      <QueryResult queryResult={queryResult}
+        UpdateMetaData={handleUpdateResultMetaData}
+        showCol={ showCol || [] } wantedType={ wantedType || [] }
+        queryType={queryType} busy={busy} SaveQuery={handleSaveQueries}/>
     }
 
 
