@@ -18,6 +18,8 @@ export const PrepareResult = (result, title, pluralTitle) => {
 
   var arr = []
 
+  // console.log(result);
+
   if(result[title].constructor === Object){
     titles = Object.keys(result[title])
     data.push(Object.values(result[title]))
@@ -43,7 +45,7 @@ export const PrepareResult = (result, title, pluralTitle) => {
   retObj.refType = data[0][titles.indexOf('Type')];
   retObj.dataType = dataType
 
-  console.log(retObj);
+  // console.log(retObj);
 
   return retObj
 }

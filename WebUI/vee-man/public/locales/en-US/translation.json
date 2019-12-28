@@ -61,7 +61,9 @@
             "kind": "Kind",
             "capacity": "Capacity",
             "freeSpace": "FreeSpace",
-            "queryType": "Query Type"
+            "queryType": "Query Type",
+            "dataType": "Type",
+            "convert": "Convert"
         },
         "hint": {
             "name": "Your Name",

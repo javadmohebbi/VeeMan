@@ -109,7 +109,7 @@ const QueryResult = (props) => {
                 {
                   (typeof result === 'object' && result !== null) ?
                     <div>
-                      <div className="mt-5 mb-5 p-2 pb-5">
+                      <div className="mt-5 p-2">
                         <ResultTable result={preparedResults} />
                       </div>
                     </div>

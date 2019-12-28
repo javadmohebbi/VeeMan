@@ -3,7 +3,6 @@ export const ExtractUID = (str) => {
   return res[res.length-1]
 }
 
-
 export const FormatBytes = (a,b) => {
   var aa = parseInt(a)
   if ( 0 === aa )
@@ -12,10 +11,10 @@ export const FormatBytes = (a,b) => {
   return parseFloat((a/Math.pow(c,f)).toFixed(d))+""+e[f]
 }
 
-
 export const FormatIntNumbers = (a) => {
     return formatNumbers(parseInt(a), 0)
 }
+
 export const FormatFloatNumbers = (a) => {
     return formatNumbers(parseFloat(a), 2)
 }
@@ -74,7 +73,6 @@ export const FormatString = (str) => {
     }
     return "N/A"
 }
-
 
 export const FormatPercentage = (str) => {
   return FormatString(str) + '%'
