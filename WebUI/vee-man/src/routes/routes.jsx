@@ -16,6 +16,7 @@ import ReposList from '../components/Repositories/repos'
 import JobBackupSession from '../components/Jobs/jobBackupSession'
 import BackupServerList from '../components/BackupServers/list'
 import QueryBuilder from '../components/QueryBuilder/queryBuilder'
+import QueriesList from '../components/RawQueries/list'
 
 
 
@@ -54,6 +55,7 @@ const MainRouter = () => {
                                 <Route exact path="/mgmt/jobs/:id/info" component={JobBackupSession} />
 
                                 <Route exact path="/mgmt/query" component={QueryBuilder} />
+                                <Route exact path="/mgmt/queries" component={QueriesList} />
 
 
                                 <Route exact path="*" component={NotFound} key="notfound"/>

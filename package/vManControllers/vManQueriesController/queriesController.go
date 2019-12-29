@@ -158,9 +158,8 @@ func GetAllRawQueries(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
-		e := bson.D{}
 
-		res, err := models.FindAll(models.RawQueryCollection, e)
+		res, err := models.FindAll(models.RawQueryCollection, bson.D{})
 
 		if err != nil {
 			log.Println("Find All Error ", err)

@@ -41,7 +41,7 @@ export const GetAllQueryFromServer = () => {
   const t = i18n.getFixedT()
 
   // const apiURL = (`${process.env.REACT_APP_API_BASE}auth/login`)
-  const apiURL = (`${WebUiConf().apiURL}/ui/get/raw/query/all`)
+  const apiURL = (`${WebUiConf().apiURL}/ui/get/all/raw/query`)
 
   return fetch(apiURL, {
       method: "GET",
@@ -53,6 +53,7 @@ export const GetAllQueryFromServer = () => {
   })
   .then(response => response.json())
   .then(json => {
+      console.log(json);
       if (json.hasOwnProperty('error') && json.error !== false) {
           return {
               message: t("general.err.get"),

@@ -16,10 +16,32 @@ const RawQueryCollection string = "RawQueries"
 type RawQuery struct {
 	ID        interface{} `json:"id" bson:"_id"`
 	UID       interface{} `json:"uid" bson:"uid"`
-	Queries   interface{} `json:"queries" bson:"queries"`
-	Metadata  interface{} `json:"metadata" bson:"metadata"`
+	Queries   []Query     `json:"queries" bson:"queries"`
+	Metadata  MetaData    `json:"metadata" bson:"metadata"`
 	LastSeen  time.Time   `json:"LastSeen" bson:"lastSeen"`
 	CreatedAt time.Time   `json:"CreatedAt" bson:"createdAt"`
+}
+
+// Queries - struct
+type Query struct {
+	CountID int      `json:"countId" bson:"countId"`
+	queryID string   `json:"queryId" bson:"queryId"`
+	Filters []Filter `json:"filters" bson:"filters"`
+}
+
+// Filter - struct
+type Filter struct {
+	Field              string `json:"field" bson:"field"`
+	Value              string `json:"value" bson:"value"`
+	LogicalOperator    string `json:"logicalOperator" bson:"logicalOperator"`
+	ComparisonOperator string `json:"comparisonOperator" bson:"comparisonOperator"`
+}
+
+// MetaData - strut
+type MetaData struct {
+	Title    string   `json:"title" bson:"title"`
+	ShowCol  []bool   `json:"showCol" bson:"showCol"`
+	WantType []string `json:"wantedType" bson:"wantedType"`
 }
 
 // GetNewEmpty - Get a new Get New Empty instance of Model FindAll method
