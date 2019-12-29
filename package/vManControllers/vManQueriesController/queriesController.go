@@ -197,3 +197,45 @@ func GetAllRawQueries(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
+
+// DeleteRawQuery - Delete a Raw query based on UID
+func DeleteRawQuery(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	var rr models.ResponseResult
+	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+	var user models.User
+
+	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
+		filter := bson.D{
+			{Key: "uid", Value: objectID},
+		}
+
+		dr, err := models.DeleteOne(models.RawQueryCollection, filter)
+
+		if err != nil {
+			rr = models.ResponseResult{
+				Error:  "Can not delete query!",
+				Result: "",
+			}
+			_ = json.NewEncoder(w).Encode(rr)
+			return
+		}
+
+		rr = models.ResponseResult{
+			Error:  false,
+			Result: dr,
+		}
+		_ = json.NewEncoder(w).Encode(rr)
+		return
+
+	}
+
+	rr = models.ResponseResult{
+		Error:  "Token is invalid!",
+		Result: "",
+	}
+	_ = json.NewEncoder(w).Encode(rr)
+	return
+
+}
