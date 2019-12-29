@@ -55,6 +55,7 @@ const MainRouter = () => {
                                 <Route exact path="/mgmt/jobs/:id/info" component={JobBackupSession} />
 
                                 <Route exact path="/mgmt/query" component={QueryBuilder} />
+                                <Route exact path="/mgmt/query/:id" component={QueryBuilder} />
                                 <Route exact path="/mgmt/queries" component={QueriesList} />
 
 

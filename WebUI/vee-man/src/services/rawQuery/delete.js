@@ -10,7 +10,7 @@ export const DeleteQueryFromServer = (queryId) => {
   const apiURL = (`${WebUiConf().apiURL}/ui/delete/raw/query/${queryId}`)
 
   return fetch(apiURL, {
-      method: "GET",
+      method: "DELETE",
       headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const DeleteQueryFromServer = (queryId) => {
   .then(json => {
       if (json.hasOwnProperty('error') && json.error !== false) {
           return {
-              message: t("general.err.get"),
+              message: t("general.err.delete"),
               error: true
           }
       }

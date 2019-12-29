@@ -19,26 +19,44 @@ const QueryBuilder = (props) => {
 
   const { t } = props
 
-  const uuidQuery = uuidv1()
+  const {
+    queriesParam=null,
+    metadataParam=null,
+    titleParam=null,
+    uidParam=null,
+    cIdParam=null,
+    typeParam=null,
+    runItParam=false,
+    justViewParam=false,
+  } = props.location.state || {}
+  // const { showColParam=[], wantedTypeParam=[ = metadataParam || {}
+  const showColParam = metadataParam === null ? [] : metadataParam.showCol
+  const wantedTypeParam = metadataParam === null ? [] : metadataParam.wantedType
 
-  const queryCountId = 0
+  const uuidQuery = uidParam || uuidv1()
+
+  const queryCountId = cIdParam || 0
 
   const containerId = 'queryBuilder'
-  const [selectedType, setSelectedType] = React.useState(t('general.msg.nothingSelected'))
+
+
+  const [selectedType, setSelectedType] = React.useState(typeParam || t('general.msg.nothingSelected'))
   const [busy, setBusy] = React.useState(false)
 
-  const [wantedType, setWantedType] = React.useState([])
-  const [showCol, setShowCol] = React.useState([])
-  const [queryTitle, setQueryTitle] = React.useState(uuidQuery)
+  const [wantedType, setWantedType] = React.useState(wantedTypeParam || [])
+  const [showCol, setShowCol] = React.useState(showColParam || [])
+  const [queryTitle, setQueryTitle] = React.useState(titleParam || uuidQuery)
 
   const [queryId, setQueryID] = React.useState(uuidQuery)
 
-  const [queries, setQueries] = React.useState([
+  const [queries, setQueries] = React.useState( queriesParam || []
+    //[
     // queryId: 'xxxx-yyyyyyyy-zzzz-dddd'
     // filters: [
     //    { field: null, value: null, logicalOperator: undefined, comparisonOperator: null }
     // ]
-  ])
+    //]
+  )
 
 
   const hadnleToastMessage = (kind='success', message) => {
@@ -117,6 +135,7 @@ const QueryBuilder = (props) => {
       showCol: showCol,
       wantedType: wantedType,
       title: queryTitle,
+      type: selectedType,
     }
     setBusy(true)
 
@@ -141,7 +160,12 @@ const QueryBuilder = (props) => {
         <div className="row">
           <div className="col-12">
               <h1 className="page-title pb-2">
-                {t('general.nav.query')}
+                {
+                  justViewParam === false ?
+                  t('general.nav.query')
+                  :
+                  <>{titleParam}</>
+                }
                 {/*
                   busy ?
                   <LightSpinner spinnerSize="sm" />
@@ -154,49 +178,43 @@ const QueryBuilder = (props) => {
 
         {/* BODY */}
         <div className="pg-body">
+
           {/* SUB HEADER */}
-          <div className="pg-sb-header mt-2 mb-2">
-            {/* Header content */}
-            <div className="pg-qry">
-              <div className="pg-qry-builder">
+          {
+            justViewParam ? null :
+            <div className="pg-sb-header mt-2 mb-2">
+              {/* Header content */}
+              <div className="pg-qry">
+                <div className="pg-qry-builder">
 
-                {/* Option Query Type */}
-                <div className="col-sm-12 col-md-6 pg-qry-run">
-                  <label htmlFor="querytype" className="col-form-label">{t('general.inp.queryType')}</label>
-                  <select id="querytype" disabled={busy} className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
-                      <option key={'nothingselected'} value={t('general.msg.nothingSelected')}>{t('general.msg.nothingSelected')}</option>
-                      {
-                        GetQueryTypes().map((item, index) => {
-                          return (
-                            <option key={index} value={item.cameleCase}>{item.queryType}</option>
-                          )
-                        })
-                      }
-                    </select>
+                  {/* Option Query Type */}
+                  <div className="col-sm-12 col-md-6 pg-qry-run">
+                    <label htmlFor="querytype" className="col-form-label">{t('general.inp.queryType')}</label>
+                    <select id="querytype" disabled={busy} className="form-control" value={selectedType} onChange={handleSelectTypeChange}>
+                        <option key={'nothingselected'} value={t('general.msg.nothingSelected')}>{t('general.msg.nothingSelected')}</option>
+                        {
+                          GetQueryTypes().map((item, index) => {
+                            return (
+                              <option key={index} value={item.cameleCase}>{item.queryType}</option>
+                            )
+                          })
+                        }
+                      </select>
+                  </div>
 
-                  {/*
-                    queries.length > 0 ?
-                    <button className="btn btn-warning ml-2">
-                      <i className="fas fa-play"></i>
-                      {t('general.btn.run')}
-                    </button>
-                    :
-                    null
-                  */}
-                </div>
-
-                {/*  QUERY Tabs  */}
-                <div className="col-12 mt-4 mb-4">
-                  <QueryTabs queries={queries} queryCountId={queryCountId} queryType={selectedType}
-                    queryBuilderBusy={busy}
-                    AddQuery={handleAddQuery}
-                    RemoveQuery={handleRemoveQuery}
-                    UpdateQuery={handleUpdateQueries}
-                  />
+                  {/*  QUERY Tabs  */}
+                  <div className="col-12 mt-4 mb-4">
+                    <QueryTabs queries={queries} queryCountId={queryCountId} queryType={selectedType}
+                      queryBuilderBusy={busy}
+                      AddQuery={handleAddQuery}
+                      RemoveQuery={handleRemoveQuery}
+                      UpdateQuery={handleUpdateQueries}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
 
           {/* REST BODY */}
           <div className="pg-rest mt-2 mb-2">
@@ -208,6 +226,8 @@ const QueryBuilder = (props) => {
               queryTitle={queryTitle}
               queryId={queryId}
               UpdateMetaData={handleUpdateResultMetaData}
+              runItParam={runItParam}
+              justViewParam={justViewParam}
               queryType={selectedType === t('general.msg.nothingSelected') ? '' : selectedType} />
           </div>
         </div>

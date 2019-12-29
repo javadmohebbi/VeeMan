@@ -7,7 +7,7 @@ import ResultTable from './resultTable'
 
 const QueryResult = (props) => {
   const { t } = props
-  const { queryResult=null, queryType, wantedType=[], showCol=[], UpdateMetaData } = props
+  const { queryResult=null, queryType, wantedType=[], showCol=[], UpdateMetaData, justViewParam=false } = props
 
   const [title, setTitle] = React.useState('')
   const [pluralTitle, setPluralTitle] = React.useState(null)
@@ -65,6 +65,7 @@ const QueryResult = (props) => {
                       <div className="mt-5 p-2">
                         <ResultTable result={preparedResults}
                           UpdateMetaData = {handleUpdateResultMetaData}
+                          justViewParam={justViewParam}
                           wantedType={ wantedType || [] } showCol={ showCol || [] }/>
                       </div>
                     </div>

@@ -23,7 +23,7 @@ const FormatDateStr = (str) => {
 
 const ResultTable = (props) => {
   const {t} = props
-  const {result, UpdateMetaData } = props
+  const {result, UpdateMetaData, justViewParam=false } = props
 
   const [headers, setHeaders] = React.useState([])
   const [dataTypes, setDataTypes] = React.useState([])
@@ -197,17 +197,6 @@ const ResultTable = (props) => {
           console.log(e);
           return null
         }
-        // console.log(data);
-        // return (
-        //   <>
-        //   <td key={index} title={ 'data' }
-        //     style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        //     {
-        //       'data'
-        //     }
-        //   </td>
-        //   </>
-        // )
       } else {
         return null
       }
@@ -244,24 +233,27 @@ const ResultTable = (props) => {
 
   return (
     <div className="rt-holder">
-      {/* */
-      <table className="table table-dark table-striped table-hover">
-        <thead>
-          <tr>
-            {
-              showCol.map((shc, index) => (
-                <th scope="col" key={'shc-'+index} style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis', verticalAlign: 'top'  }}>
-                  <select style={{maxWidth: '100%'}} id={`sh-${index}`} value={shc} onChange={e => {e.preventDefault(); handleChangeShowCols(e.target.value, index)}}>
-                    <option key={`true-${index}`} value={true}>{t('general.inp.show') + `(${headers[index]})`}</option>
-                    <option key={`false-${index}`} value={false}>{t('general.inp.hide') + `(${headers[index]})`}</option>
-                  </select>
-                </th>
-              ))
-            }
-          </tr>
-        </thead>
-      </table>
-      /**/}
+      {
+        justViewParam === true ? null :
+        <table className="table table-dark table-striped table-hover">
+          <thead>
+            <tr>
+              {
+                showCol.map((shc, index) => (
+                  <th scope="col" key={'shc-'+index} style={{whiteSpace: 'nowrap',overflow: 'hidden', textOverflow: 'ellipsis', verticalAlign: 'top'  }}>
+                    <select style={{maxWidth: '100%'}} id={`sh-${index}`} value={shc} onChange={e => {e.preventDefault(); handleChangeShowCols(e.target.value, index)}}>
+                      <option key={`true-${index}`} value={true}>{t('general.inp.show') + `(${headers[index]})`}</option>
+                      <option key={`false-${index}`} value={false}>{t('general.inp.hide') + `(${headers[index]})`}</option>
+                    </select>
+                  </th>
+                ))
+              }
+            </tr>
+          </thead>
+        </table>
+      }
+
+
 
 
       {
@@ -298,6 +290,9 @@ const ResultTable = (props) => {
         }
         {
           dataTypes.length <= 0 ? null :
+          <>
+          {
+            justViewParam === true ? null :
             <tr key={'dts'}>
               {
                 wantedType.map((dtp, ind) => (
@@ -305,6 +300,9 @@ const ResultTable = (props) => {
                 ))
               }
             </tr>
+          }
+
+          </>
 
         }
       </thead>

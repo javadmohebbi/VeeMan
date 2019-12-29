@@ -17,7 +17,7 @@ const QueryGrouping = (props) => {
   const { t } = props
   const { queries, queryType, ToastMessage, UpdateBusy,
     SaveQueryToServer, queryId,
-    wantedType=[], showCol=[], UpdateMetaData, queryTitle='' } = props
+    wantedType=[], showCol=[], UpdateMetaData, queryTitle='', runItParam=false, justViewParam=false } = props
 
   const [busy, setBusy] = React.useState(false)
   const [queryResult, setQueryResult] = React.useState(null)
@@ -29,6 +29,13 @@ const QueryGrouping = (props) => {
   const [editTitle, setEditTitle] = React.useState(false)
   const [txtTitle, setTxtTitle] = React.useState(queryTitle || '')
 
+
+  React.useEffect(()=>{
+    if (queryString !== '' && queryString !== null && runItParam === true) {
+      handleSendServerRequest(queryString)
+    }
+    // eslint-disable-next-line
+  },[runItParam, queryString])
 
 
   React.useEffect(()=>{
@@ -134,14 +141,13 @@ const QueryGrouping = (props) => {
     UpdateMetaData(newShowCol, newWantedType, queryTitle === '' ? queryType + '_'+ queryId : queryTitle);
   }
 
-
   return (
     <>
     {
       queries.length <= 1 ? null :
       <>
       {
-        (queryType === t('general.msg.nothingSelected') || queryType === '') ? null
+        justViewParam===false && (queryType === t('general.msg.nothingSelected') || queryType === '') ? null
         :
         <div className="card text-white bg-dark mb-3">
         <div className="card-body pt-4">
@@ -182,21 +188,35 @@ const QueryGrouping = (props) => {
       <div className="card text-white bg-dark mb-3">
         <div className="card-body">
           <h5 className="card-title">
-            {t('general.veeam.queryString')} -  {
+            {t('general.veeam.queryString') + '  '}  {
               !editTitle ?
                 <>
-                <span className="text-warning">{txtTitle}</span>
-                <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(true)}}
-                  className="btn btn-warning btn-sm ml-1">
-                  <i className="fas fa-pen mx-auto px-auto"></i>
-                </button>
+                {
+                  justViewParam===false ?
+                  <>
+                    <span className="text-warning">{txtTitle}</span>
+                    <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(true)}}
+                      className="btn btn-warning btn-sm ml-1">
+                      <i className="fas fa-pen mx-auto px-auto"></i>
+                    </button>
+                  </>
+                  :
+                  null
+                }
                 </>
               :
                 <>
-                  <input disabled={busy} type="text" className="form-control d-inline w-auto"
-                    value={txtTitle} onChange={e => setTxtTitle(e.target.value)} />
-                  <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); UpdateMetaData(showCol, wantedType, txtTitle)}} className="ml-2 btn btn-sm btn-success"><i className="fas fa-save mx-auto px-auto"></i></button>
-                  <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); setTxtTitle(queryTitle) ;UpdateMetaData(showCol, wantedType, queryTitle)}} className="ml-2 btn btn-sm btn-danger">x</button>
+                  {
+                    justViewParam === false ?
+                    <>
+                      <input disabled={busy} type="text" className="form-control d-inline w-auto"
+                        value={txtTitle} onChange={e => setTxtTitle(e.target.value)} />
+                      <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); UpdateMetaData(showCol, wantedType, txtTitle)}} className="ml-2 btn btn-sm btn-success"><i className="fas fa-save mx-auto px-auto"></i></button>
+                      <button disabled={busy} onClick={e => {e.preventDefault(); setEditTitle(false); setTxtTitle(queryTitle) ;UpdateMetaData(showCol, wantedType, queryTitle)}} className="ml-2 btn btn-sm btn-danger">x</button>
+                    </>
+                    :
+                    null
+                  }
                 </>
             }
 
@@ -212,13 +232,20 @@ const QueryGrouping = (props) => {
             </button>
             {
               queryResult === null ? null :
-              <button className="btn btn-success ml-2"
-                disabled={busy}
-                onClick={e => {e.preventDefault(); handleSaveQueries()}}
-                >
-                <i className="fas fa-save"></i>
-                {t('general.btn.save')}
-              </button>
+              <>
+              {
+                justViewParam === false ?
+                <button className="btn btn-success ml-2"
+                  disabled={busy}
+                  onClick={e => {e.preventDefault(); handleSaveQueries()}}
+                  >
+                  <i className="fas fa-save"></i>
+                  {t('general.btn.save')}
+                </button>
+                :
+                null
+              }
+              </>
             }
 
             {
@@ -238,6 +265,7 @@ const QueryGrouping = (props) => {
       <QueryResult queryResult={queryResult}
         UpdateMetaData={handleUpdateResultMetaData}
         showCol={ showCol || [] } wantedType={ wantedType || [] }
+        justViewParam={justViewParam}
         queryType={queryType} busy={busy} SaveQuery={handleSaveQueries}/>
     }
 

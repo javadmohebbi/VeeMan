@@ -4,11 +4,13 @@ import { withTranslation } from 'react-i18next'
 import VeeManTablePagination from './pagination'
 
 import { GetPaginatedItems } from '../../configs/pagination'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 const VeeManTable = (props) => {
 
-  const { Thead, Trows, notAvailableCols=4, t, listKey=null } = props
+  const { Thead, Trows, notAvailableCols=4 } = props
+  // const { t } = props
+  // const { listKey=null, noFilter=false } = props
 
   const [pagination,setPagination] = React.useState({
     page: 1,
@@ -19,7 +21,7 @@ const VeeManTable = (props) => {
   })
   const [firstInit, setFirstInit] = React.useState(true)
 
-  const [filter, setFilter] = React.useState('')
+  // const [filter, setFilter] = React.useState('')
 
   const [theList, setTheList] = React.useState([])
 
@@ -45,54 +47,52 @@ const VeeManTable = (props) => {
 
 
 
-  const handleTxtFilterChanged = (e) => {
-    e.preventDefault()
-    setFilter(e.target.value)
-    if (e.target.value === '') {
-      setTheList(props.list)
-      setPagination(GetPaginatedItems(props.list, 1, pagination.pageSize))
-    } else {
-      var result = _.map(props.list, l => {
-        var flt = _.filter(l, (o) => {
-          var rt = _.values(o)
-          rt = _.map(rt, o => {
-            return o.toString().toLowerCase()
-          })
-          return _.includes(
-            rt,  e.target.value.toLowerCase()
-          )
-        });
-        if (flt.length === 0) {
-          return undefined
-        } else {
-          return flt
-        }
-      })
-      result = _.without(result, undefined)
-      var newArray = []
-      var i = 0
-      if (listKey !== null) {
-        for (i=0; i < result.length; i++) {
-          var obj = {}
-          obj[listKey] = result[i][0]
-          newArray.push(obj)
-        }
-      } else {
-        for (i=0; i < result.length; i++) {
-          newArray.push(result[i][0])
-        }
-      }
-      setTheList(newArray)
-      setPagination(GetPaginatedItems(newArray, 1, pagination.pageSize))
-    }
-  }
+  // const handleTxtFilterChanged = (e) => {
+  //   e.preventDefault()
+  //   setFilter(e.target.value)
+  //   if (e.target.value === '') {
+  //     setTheList(props.list)
+  //     setPagination(GetPaginatedItems(props.list, 1, pagination.pageSize))
+  //   } else {
+  //     var result = _.map(props.list, l => {
+  //       var flt = _.filter(l, (o) => {
+  //         var rt = _.values(o)
+  //         if (rt.toString().toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) {
+  //           return true;
+  //         }
+  //         return false;
+  //       });
+  //       if (flt.length === 0) {
+  //         return undefined
+  //       } else {
+  //         return flt
+  //       }
+  //     })
+  //     result = _.without(result, undefined)
+  //     var newArray = []
+  //     var i = 0
+  //     if (listKey !== null) {
+  //       for (i=0; i < result.length; i++) {
+  //         var obj = {}
+  //         obj[listKey] = result[i][0]
+  //         newArray.push(obj)
+  //       }
+  //     } else {
+  //       for (i=0; i < result.length; i++) {
+  //         newArray.push(result[i][0])
+  //       }
+  //     }
+  //     setTheList(newArray)
+  //     setPagination(GetPaginatedItems(newArray, 1, pagination.pageSize))
+  //   }
+  // }
 
 
   return (
     <>
 
-    {
-      props.list.length ?
+    {/*
+      props.list.length && noFilter === false ?
       <div className="mr-3 ml-3 mb-3 float-left">
         <div className="input-group btn-group-sm">
           <div className="input-group-prepend">
@@ -107,7 +107,7 @@ const VeeManTable = (props) => {
       </div>
       :
       null
-    }
+    */}
 
     <VeeManTablePagination pagination={pagination} handleChangePagination={handleChangePagination} />
 

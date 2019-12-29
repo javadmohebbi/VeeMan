@@ -52,8 +52,7 @@ export const GetAllQueryFromServer = () => {
       },
   })
   .then(response => response.json())
-  .then(json => {
-      console.log(json);
+  .then(json => {      
       if (json.hasOwnProperty('error') && json.error !== false) {
           return {
               message: t("general.err.get"),

@@ -112,7 +112,7 @@ func GetRawQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	var rr models.ResponseResult
-	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+	objectID := mux.Vars(r)["objectId"]
 	var user models.User
 
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {
@@ -202,7 +202,7 @@ func DeleteRawQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	var rr models.ResponseResult
-	objectID := models.GetObjectId(mux.Vars(r)["objectId"])
+	objectID := mux.Vars(r)["objectId"]
 	var user models.User
 
 	if ok := user.GetLoggedIn(ctx.Get(r, "jwtToken")); ok {

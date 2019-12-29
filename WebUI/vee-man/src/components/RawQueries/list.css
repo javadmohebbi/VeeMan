@@ -1,0 +1,14 @@
+.pg-body {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  align-items: stretch;
+}
+
+.pg-sb-header {
+  flex: 0 1 auto;
+}
+
+.pg-rest {
+  flex: 1 1 auto;
+}

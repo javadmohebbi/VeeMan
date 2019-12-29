@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// RawQueryCollection - collection
 const RawQueryCollection string = "RawQueries"
 
 // RawQuery - struct
@@ -22,10 +23,10 @@ type RawQuery struct {
 	CreatedAt time.Time   `json:"CreatedAt" bson:"createdAt"`
 }
 
-// Queries - struct
+// Query - struct
 type Query struct {
 	CountID int      `json:"countId" bson:"countId"`
-	queryID string   `json:"queryId" bson:"queryId"`
+	QueryID string   `json:"queryId" bson:"queryId"`
 	Filters []Filter `json:"filters" bson:"filters"`
 }
 
@@ -42,6 +43,7 @@ type MetaData struct {
 	Title    string   `json:"title" bson:"title"`
 	ShowCol  []bool   `json:"showCol" bson:"showCol"`
 	WantType []string `json:"wantedType" bson:"wantedType"`
+	Type     string   `json:"type" bson:"type"`
 }
 
 // GetNewEmpty - Get a new Get New Empty instance of Model FindAll method
