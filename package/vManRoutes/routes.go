@@ -91,5 +91,11 @@ func UI(r *mux.Router) {
 
 	r.HandleFunc("/run/raw/query",
 		middleware.VbEntMgrLogonSession(vManQueriesController.RunRawQuery)).Methods("POST")
+	r.HandleFunc("/save/raw/query",
+		middleware.VbEntMgrLogonSession(vManQueriesController.SaveRawQuery)).Methods("POST")
+	r.HandleFunc("/get/raw/query/{objectId}",
+		middleware.VbEntMgrLogonSession(vManQueriesController.GetRawQuery)).Methods("GET")
+	r.HandleFunc("/get/raw/query/all",
+		middleware.VbEntMgrLogonSession(vManQueriesController.GetAllRawQueries)).Methods("GET")
 
 }

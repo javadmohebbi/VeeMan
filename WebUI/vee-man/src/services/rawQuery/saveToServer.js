@@ -19,7 +19,7 @@ export const SaveQueryToServer = (queries, metadata, queryId=null) => {
       body: JSON.stringify({
         queries: queries,
         metadata: metadata,
-        queryId: queryId
+        uid: queryId,
       })
   })
   .then(response => response.json())

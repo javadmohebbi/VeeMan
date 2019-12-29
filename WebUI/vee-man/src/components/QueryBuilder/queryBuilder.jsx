@@ -107,12 +107,11 @@ const QueryBuilder = (props) => {
     }
 
     if (newTitle !== '' && newTitle !== queryTitle) {
-      console.log(newTitle, queryTitle);
       setQueryTitle(newTitle)
     }
   }
 
-  // Save
+  // Save Query
   const handleSaveQueryToServer = () => {
     var metadata = {
       showCol: showCol,
@@ -120,7 +119,8 @@ const QueryBuilder = (props) => {
       title: queryTitle,
     }
     setBusy(true)
-    SaveQueryToServer(queries, metadata, queryId || null).then(data => {
+
+    SaveQueryToServer(queries, metadata, queryId).then(data => {
       if (data.hasOwnProperty('error') && data.error === true) {
         // Handle Errors
         hadnleToastMessage('error', data.message)
