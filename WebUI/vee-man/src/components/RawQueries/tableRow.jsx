@@ -1,7 +1,6 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 import LightSpinner from '../Loading/Spinner/Light'
-import {DeleteQueryFromServer} from '../../services/rawQuery/delete'
 
 import {Link} from 'react-router-dom'
 
@@ -27,7 +26,7 @@ const QueryListRow = (props) => {
     setBusy(true)
     RemoveFromList(uId, index)
     setBusy(false)
-    
+
   }
 
 
