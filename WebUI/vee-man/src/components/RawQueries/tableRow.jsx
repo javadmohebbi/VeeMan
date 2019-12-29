@@ -49,7 +49,7 @@ const QueryListRow = (props) => {
                         uidParam: row.uid,
                         cIdParam: getLastCountId(row.queries),
                         typeParam: row.metadata.type,
-                        runItParam: true,
+                        runItParam: false,
                         justViewParam: false,
                       }
                     }}

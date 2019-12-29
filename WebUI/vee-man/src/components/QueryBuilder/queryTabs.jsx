@@ -134,7 +134,10 @@ export const QueryTabs = (props) => {
 
                 <div className="pt-2 pb-2 px-2">
 
-                  <QueryFilters queryBuilderBusy={queryBuilderBusy} filters={query.filters} queryId={query.queryId} UpdateFilters={handleUpdateQuery}/>
+                  <QueryFilters queryBuilderBusy={queryBuilderBusy} filters={query.filters}
+                    queryType={queryType}
+                    queryId={query.queryId}
+                    UpdateFilters={handleUpdateQuery}/>
 
                 </div>
               </div>

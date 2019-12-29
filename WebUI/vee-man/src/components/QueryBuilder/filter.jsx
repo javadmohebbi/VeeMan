@@ -1,6 +1,6 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
-
+import { GetTypeAHead } from '../../configs/queryBuilder/queryTypes'
 import './filter.css'
 
 const comparisons = [
@@ -19,16 +19,71 @@ const logicals = [
 const Filter = (props) => {
 
   const { filtersLength=0 } = props
-  const { UpdateFilter, RemoveFilter, ChangePosition, queryBuilderBusy } = props
+  const { UpdateFilter, RemoveFilter, ChangePosition, queryBuilderBusy, queryType } = props
 
   const { filter=null, index, queryId } = props
 
   const [logicalOperator, setLogicalOperator] = React.useState(filter.logicalOperator)
   const [comparisonOperator, setComparisonOperator] =  React.useState(filter.comparisonOperator)
 
+  const [typeAHeadArray, setTypeAHeadArray] = React.useState([])
+  const [showTypeAHead, setShowTypeAHead] = React.useState(false)
+  const [btnTypeAHeadClicked, setbtnTypeAHeadClicked] = React.useState(false)
+  const [typeAHeadFilter, setTypeAFilter] = React.useState([])
+
+  const refinputField = React.useRef(null);
+
+
+  // Ref Input
+  React.useEffect(() => {
+    const { current } = refinputField;
+
+    const handleFocus = () => {
+      // console.log('input is focussed');
+      setShowTypeAHead(true)
+    }
+    const handleBlur = () => {
+      // console.log('input is blurred');
+      // console.log(btnTypeAHeadClicked);
+      if (!btnTypeAHeadClicked) {
+        setShowTypeAHead(false)
+      }
+    }
+
+    // const handleClick = () => {
+    //   console.log('clicked');
+    // }
+
+    current.addEventListener('focus', handleFocus);
+    current.addEventListener('blur', handleBlur);
+
+    // btnCurrent.addEventListener('click', handleClick);
+
+    return () => {
+      current.removeEventListener('focus', handleFocus);
+      current.removeEventListener('blur', handleBlur);
+
+      // btnCurrent.addEventListener('click', handleClick);
+    }
+  });
+
+  React.useEffect(()=> {
+    // console.log(showTypeAHead);
+  }, [showTypeAHead])
+
+
+  React.useEffect(()=> {
+    if (queryType !== null ) {
+      var qtah = GetTypeAHead(queryType)
+      setTypeAHeadArray(qtah)
+      setTypeAFilter(qtah)
+    }
+  }, [queryType])
+
   React.useEffect(()=> {
     setComparisonOperator(filter.comparisonOperator)
   }, [filter.comparisonOperator])
+
   React.useEffect(()=> {
     setLogicalOperator(filter.logicalOperator)
   }, [filter.logicalOperator])
@@ -90,6 +145,16 @@ const Filter = (props) => {
     handleChangePosition(index, index + 1)
   }
 
+
+  const handleOnMouseEnter = (e) => {
+    e.preventDefault();
+    setbtnTypeAHeadClicked(true)
+  }
+  const handleOnMouseOut = (e) => {
+    e.preventDefault();
+    setbtnTypeAHeadClicked(false)
+  }
+
   return (
     <div className="filter-container m-3">
       <div className="form-row mx-auto text-center pr-2 pt-2 pl-2 pb-2">
@@ -135,8 +200,41 @@ const Filter = (props) => {
           <div className="col-sm-12 col-md-3">
             <input type="text" value={filter.field}
               disabled={queryBuilderBusy}
+              ref={refinputField}
+              id="txtFilter"
               onChange={e => {e.preventDefault(); handleFieldChange(e.target.value, index)}}
               className="form-control" placeholder="Field" />
+            {
+              typeAHeadArray.length === 0 ? null :
+              <>
+              {
+                typeAHeadFilter.length === 0 ? null :
+                <>
+                {
+                  showTypeAHead === false ? null :
+                  <div className="flt-typeahead bg-white shadow text-dark p-2">
+                    {
+                      typeAHeadFilter.map((f, thIndex)=> (
+                        <div key={thIndex} className="tpa-item text-left">
+                          <button
+                            onMouseEnter={handleOnMouseEnter}
+                            onMouseOut={handleOnMouseOut}
+                            className="btn btn-light w-100 text-left" onClick={e => {
+                              handleFieldChange(f.name, index);
+                              setShowTypeAHead(false);
+                            }}>
+                            {f.name} -> {f.type}
+                          </button>
+                        </div>
+                      ))
+                    }
+                  </div>
+                }
+                </>
+              }
+
+              </>
+            }
           </div>
 
           {/* Comparison Operator */}

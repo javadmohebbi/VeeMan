@@ -1,3 +1,13 @@
+import _ from 'lodash'
+
+export const GetTypeAHead = (queryType) => {
+  var filtered = _.map(GetQueryTypes() , f => { if (f.cameleCase === queryType) return f } )
+  filtered = _.without(filtered, undefined)
+  return filtered[0].fields || []
+}
+
+
+
 export const GetQueryTypes = () => {
   return [
     { queryType: "AgentRestorePoint", cameleCase: 'agentRestorePoint', fields: []},

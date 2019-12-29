@@ -8,7 +8,7 @@ import Filter from './filter'
 const QueryFilters = (props) => {
 
   const {t} = props
-  const { UpdateFilters, queryBuilderBusy } = props
+  const { UpdateFilters, queryBuilderBusy, queryType } = props
   const { queryId } = props
   // filters = [
   //    { field: null, value: null, logicalOperator: undefined, comparisonOperator: null }
@@ -75,6 +75,7 @@ const QueryFilters = (props) => {
             RemoveFilter={handleRemoveFilter}
             AddNewFilter={handleAddNewFilter}
             ChangePosition={handleChangeFilterPosition}
+            queryType={queryType === t('general.msg.nothingSelected') ? null : queryType }
             queryId={queryId}/>
         ))
       }
