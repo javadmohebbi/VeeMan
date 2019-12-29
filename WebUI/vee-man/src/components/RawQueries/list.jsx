@@ -20,8 +20,6 @@ const QueriesList = (props) => {
   const containerId = 'listQueries'
 
   const [queryList, setQueryList] = React.useState([])
-  const [nodata, setNodata] = React.useState(true)
-
   const [busy, setBusy] = React.useState(false)
 
   React.useEffect(() => {
@@ -30,14 +28,13 @@ const QueriesList = (props) => {
       GetAllQueryFromServer().then(data => {
         if (data !== null && data.hasOwnProperty('error') && data.error === true) {
           toast.error(data.message, {containerId: containerId})
-          setNodata(true)
+          setQueryList(null)
         } else {
           if (data === null ) {
-            setNodata(true)
+            setQueryList(null)
           } else {
-            setNodata(false)
+            setQueryList(data)
           }
-          setQueryList(data)
         }
         setBusy(false)
       })
@@ -102,13 +99,9 @@ const QueriesList = (props) => {
         {/* REST BODY */}
         <div className="pg-rest mt-2 mb-2">
           {
-            queryList !== null ? null :
+            queryList === null ? <span className="mx-3">{'N/A'}</span> :
             <>
-            {
-              nodata === false ? <VeeManTable list={queryList} listKey={'metadata'} Thead={Thead} Trows={Trows} />
-              :
-              <span className="mx-3" >{'N/A'}</span>
-            }
+              <VeeManTable list={queryList} listKey={'metadata'} Thead={Thead} Trows={Trows} />
             </>
           }
         </div>

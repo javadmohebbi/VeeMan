@@ -95,7 +95,7 @@ export const QueryTabs = (props) => {
                     {`qry(${query.countId})`}
                   </a>
                   {
-                    index === 0 ? null :
+                    queries.length === 1 ? null :
                     <button className="btn btn-sm btn-secondary"
                       disabled={queryBuilderBusy}
                       onClick={e => {e.preventDefault(); handleRemoveQuery(index, query.countId)}}>x</button>
