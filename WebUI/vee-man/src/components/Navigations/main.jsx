@@ -17,17 +17,17 @@ const MainNav = (props) => {
 
     const menuItems = [
         {
-            title:  t("general.nav.backupservers"),
-            key: "mgmt/backupservers",
-            to: '/mgmt/backupservers',
-            icon: 'fas fa-server',
-        },
-        {
             title:  t("general.nav.query"),
             key: "/mgmt/query",
             to: '/mgmt/query',
             icon: 'fas fa-magic',
-        }
+        },
+        {
+            title:  t("general.nav.queries"),
+            key: "mgmt/queries",
+            to: '/mgmt/queries',
+            icon: 'fas fa-list',
+        },
     ]
 
     const getActiveClass = (key) => {

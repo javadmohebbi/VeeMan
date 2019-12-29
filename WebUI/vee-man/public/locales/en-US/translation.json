@@ -79,7 +79,8 @@
             "backupservers": "Backup Servers",
             "jobs": "Jobs",
             "repositories": "Repositories",
-            "query": "Query Builder"
+            "query": "Query Builder",
+            "queries": "Saved Queries"
         },
         "slider": {
 
@@ -99,6 +100,8 @@
             "list": "Can not get requested list",
             "query": "Can not run the requested query. Mabye your provided filters are not valid for Veeam Enterprise Manager",
             "save": "Can not save information to server!",
+            "get": "Can not get requested information",
+            "delete": "Can not delete requested information",
             "auth": {
                 "invalid": "Provided Username or Password is not valid!"
             },
