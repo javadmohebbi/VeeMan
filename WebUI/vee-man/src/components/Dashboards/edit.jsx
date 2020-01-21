@@ -97,6 +97,7 @@ const EditDashboard = (props) => {
     React.useEffect(() => {
       // const defWid = JSON.parse(jsonDefaultWidget)
       // console.log(jsonDefaultWidget);
+      setRows()
     },[])
 
     React.useEffect(() => {

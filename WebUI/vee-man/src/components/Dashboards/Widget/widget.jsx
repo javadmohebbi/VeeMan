@@ -75,6 +75,10 @@ const Widget = (props) => {
     widgetTypes.Cols = []
     let widgetRows = getRows()
 
+    if (widgetRows === null) {
+      return
+    }
+
     if (widgetRows.BackupServers.length > 0) {
       widgetTypes.Cols.push(widgetRows.BackupServers.map((item) => {
         return { type: 'BackupServers', uid: item.UID, name: item.Name, i18n: 'general.veeam.backupserver' }
@@ -271,7 +275,12 @@ const Widget = (props) => {
   }
 
   return (
-    <ShowChart />
+    <>
+    {
+      getRows() === null ? null :
+      <ShowChart />
+    }
+    </>
   )
 
 
