@@ -7,9 +7,9 @@ I will update this section as soon as I completed the rest.
 
 Here are sampled dashboard & query builder:
 
-![Dashboard Builder](https://raw.githubusercontent.com/javadmohebbi/VeeMan/master/uploads/veeam-dashboard.gif)
+![Dashboard Builder](https://raw.githubusercontent.com/javadmohebbi/VeeMan/master/uploads/dashboard-builder.mp4)
 
-![Query Builder](https://raw.githubusercontent.com/javadmohebbi/VeeMan/master/uploads/veeam-querybuilder.gif)
+![Query Builder](https://raw.githubusercontent.com/javadmohebbi/VeeMan/master/uploads/query-builder.mp4)
 
 
 
