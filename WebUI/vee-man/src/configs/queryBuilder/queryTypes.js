@@ -68,7 +68,7 @@ export const GetQueryTypes = () => {
       fields: [
         { name: 'BackupSize', type: 'numeric' },
         { name: 'CompressRatio', type: 'numeric' },
-        { name: 'CreationTimeUtc', type: 'datetime' },
+        { name: 'CreationTime', type: 'datetime' },
         { name: 'DataSize', type: 'numeric' },
         { name: 'DeduplicationRatio', type: 'numeric' },
         { name: 'FilePath', type: 'string' },
@@ -83,7 +83,7 @@ export const GetQueryTypes = () => {
     },
     { queryType: "RestorePoint", cameleCase: 'restorePoint',
       fields: [
-        { name: 'BackupDateUTC', type: 'datetime' },
+        { name: 'BackupDate', type: 'datetime' },
         { name: 'Name', type: 'string' },
         { name: 'Type', type: 'string' },
         { name: 'UID', type: 'string' },
@@ -92,7 +92,7 @@ export const GetQueryTypes = () => {
     { queryType: "VmRestorePoint", cameleCase: 'vmRestorePoint',
       fields: [
         { name: 'Algorithm', type: 'string' },
-        { name: 'CreationTimeUTC', type: 'string' },
+        { name: 'CreationTime', type: 'string' },
         { name: 'HierarchyObjRef', type: 'string' },
         { name: 'Name', type: 'string' },
         { name: 'PointType', type: 'string' },
@@ -126,8 +126,8 @@ export const GetQueryTypes = () => {
     },
     { queryType: "BackupJobSession", cameleCase: 'backupJobSession',
       fields: [
-        { name: 'CreationTimeUTC', type: 'datetime' },
-        { name: 'EndTimeUTC', type: 'datetime' },
+        { name: 'CreationTime', type: 'datetime' },
+        { name: 'EndTime', type: 'datetime' },
         { name: 'JobSessionUid', type: 'string' },
         { name: 'Name', type: 'string' },
         { name: 'Reason', type: 'string' },
@@ -143,8 +143,8 @@ export const GetQueryTypes = () => {
     { queryType: "RestoreSession", cameleCase: 'restoreSession', fields: [] },
     { queryType: "BackupTaskSession", cameleCase: 'backupTaskSession',
       fields: [
-        { name: 'CreationTimeUTC', type: 'datetime' },
-        { name: 'EndTimeUTC', type: 'datetime' },
+        { name: 'CreationTime', type: 'datetime' },
+        { name: 'EndTime', type: 'datetime' },
         { name: 'JobSessionUid', type: 'string' },
         { name: 'Name', type: 'string' },
         { name: 'Reason', type: 'string' },

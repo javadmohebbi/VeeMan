@@ -11,8 +11,21 @@ import { SaveQueryToServer } from '../../services/rawQuery/saveToServer'
 import Toastification from '../Toastification/toastification'
 import { toast } from 'react-toastify'
 
+// import { GetQueryFromServer } from '../../services/rawQuery/get'
+
 import './query.css'
 
+
+
+// const getLastCountId = (qs) => {
+//   var cId = 1
+//   for (var i=0; i < qs.length; i++) {
+//     if (cId < qs[i].countId) {
+//       cId = qs[i].countId
+//     }
+//   }
+//   return cId++
+// }
 
 
 const QueryBuilder = (props) => {
@@ -29,13 +42,16 @@ const QueryBuilder = (props) => {
     runItParam=false,
     justViewParam=false,
   } = props.location.state || {}
+
+
   // const { showColParam=[], wantedTypeParam=[ = metadataParam || {}
   const showColParam = metadataParam === null ? [] : metadataParam.showCol
   const wantedTypeParam = metadataParam === null ? [] : metadataParam.wantedType
 
-  const uuidQuery = uidParam || uuidv1()
+  const uuidQuery = uidParam || props.match.params.id || uuidv1()
 
-  const queryCountId = cIdParam || 0
+  // eslint-disable-next-line
+  const [queryCountId, setQueryCountId] = React.useState (cIdParam || 0)
 
   const containerId = 'queryBuilder'
 
@@ -57,6 +73,29 @@ const QueryBuilder = (props) => {
     // ]
     //]
   )
+
+  // React.useEffect(() => {
+  //   if (props.match.params.id !== null && queries.length === 0) {
+  //     setBusy(true)
+  //     GetQueryFromServer(props.match.params.id).then(data => {
+  //       if (data !== null && data.hasOwnProperty('error') && data.error === true) {
+  //         toast.error(data.message, {containerId: containerId})
+  //       } else {
+  //         if (data !== null ) {
+  //           setSelectedType(data.metadata.type)
+  //           setWantedType(data.metadata.wantedType)
+  //           setShowCol(data.metadata.showCol)
+  //           setQueryTitle(data.metadata.title)
+  //           setQueryID(data.uid)
+  //           setQueryCountId(getLastCountId(data.queries))
+  //           setQueries(data.queries)
+  //         }
+  //         // console.log(data);
+  //       }
+  //       setBusy(false)
+  //     })
+  //   }
+  // }, [props.match.params.id, queries])
 
 
   const hadnleToastMessage = (kind='success', message) => {
@@ -217,19 +256,21 @@ const QueryBuilder = (props) => {
           }
 
           {/* REST BODY */}
-          <div className="pg-rest mt-2 mb-2">
-            <QueryGrouping queries={queries}
-              ToastMessage={hadnleToastMessage}
-              UpdateBusy={handleSetBusy}
-              SaveQueryToServer={handleSaveQueryToServer}
-              wantedType={wantedType} showCol={showCol}
-              queryTitle={queryTitle}
-              queryId={queryId}
-              UpdateMetaData={handleUpdateResultMetaData}
-              runItParam={runItParam}
-              justViewParam={justViewParam}
-              queryType={selectedType === t('general.msg.nothingSelected') ? '' : selectedType} />
-          </div>
+          <>
+            <div className="pg-rest mt-2 mb-2">
+              <QueryGrouping queries={queries}
+                ToastMessage={hadnleToastMessage}
+                UpdateBusy={handleSetBusy}
+                SaveQueryToServer={handleSaveQueryToServer}
+                wantedType={wantedType} showCol={showCol}
+                queryTitle={queryTitle}
+                queryId={queryId}
+                UpdateMetaData={handleUpdateResultMetaData}
+                runItParam={runItParam}
+                justViewParam={justViewParam}
+                queryType={selectedType === t('general.msg.nothingSelected') ? '' : selectedType} />
+            </div>
+          </>
         </div>
       </div>
 

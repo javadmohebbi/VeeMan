@@ -13,6 +13,9 @@ import { toast } from 'react-toastify'
 
 import './list.css'
 
+
+
+
 const QueriesList = (props) => {
 
   const {t} = props
